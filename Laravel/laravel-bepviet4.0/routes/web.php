@@ -19,6 +19,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         return view('admin.dashboard');
     })->name('dashboard');
 
+    Route::get('/userreport', function () {
+        return view('admin.UserReport');
+    })->name('userreport');
+    Route::get('/users', function () {
+        return view('admin.Users');
+    })->name('users');
     // Sau này thêm các route khác:
     // Route::get('/users', [UserController::class, 'index'])->name('users');
 });
+

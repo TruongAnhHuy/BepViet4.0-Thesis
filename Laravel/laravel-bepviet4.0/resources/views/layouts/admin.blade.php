@@ -159,8 +159,8 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-users"></i> <span>Quản lý thông tin User</span>
+                <a href="{{ route('admin.users') }}" class="nav-link {{ request()->routeIs('admin.users') ? 'active' : '' }}">
+                    <i class="fas fa-users"></i> <span>Quản lý người dùng</span> 
                 </a>
             </li>
             <li class="nav-item">
@@ -179,7 +179,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('admin.userreport') }}" class="nav-link {{ request()->routeIs('admin.userreport') ? 'active' : '' }}">
                     <i class="fas fa-flag"></i> <span>Quản lý tố cáo người dùng</span>
                 </a>
             </li>

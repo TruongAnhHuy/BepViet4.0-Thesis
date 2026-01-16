@@ -2,20 +2,24 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens; // Nhớ import Sanctum
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
-    // 1. Khai báo khóa chính (Vì trong SQL bạn đặt là user_id, không phải id)
-    protected $primaryKey = 'user_id'; 
+    protected $table = 'users'; // Khai báo tên bảng cho chắc chắn
+    protected $primaryKey = 'user_id'; // Khai báo khóa chính là user_id (mặc định Laravel tìm id)
 
-    // 2. Khai báo các cột được phép thêm dữ liệu (Mass Assignment)
+    /**
+     * Các trường được phép thêm dữ liệu (Mass Assignment)
+     */
     protected $fillable = [
-        'username', // Sửa 'name' thành 'username'
+        'username', // Khớp với DB
         'email',
         'password',
         'avatar',
@@ -23,18 +27,15 @@ class User extends Authenticatable
         'role_id',
     ];
 
+    /**
+     * Các trường bị ẩn khi trả về JSON (bảo mật)
+     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            
-        ];
-    }
-    public $timestamps = false; // Thêm dòng này vào Model nếu bạn xóa cột updated_at
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
 }

@@ -9,8 +9,7 @@ class LayoutController extends Controller
 {
     public function menu()
     {
-        return response()->json([
-            
+        return response()->json([     
         ]);
     }
 }

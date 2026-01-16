@@ -14,7 +14,7 @@ export default function Header() {
         <img src="/logo01.png" alt="Ẩm Thực" />
         <a href="/" className="navbar-brand fw-bold">Ẩm thực</a>
         <a href="/" className="navbar-brand fw-bold"><i class="fa-solid fa-house"></i>Trang chủ</a>
-        <a href="/" className="navbar-brand fw-bold">Blog</a>
+        <a href="/blog" className="navbar-brand fw-bold">Blog</a>
         <a href="/" className="navbar-brand fw-bold">Món ăn</a>
         {menu.map(item => (
           <a

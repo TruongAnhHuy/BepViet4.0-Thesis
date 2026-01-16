@@ -8,3 +8,9 @@ export const getSlides = () =>
 
 export const getProducts = () =>
   fetch(`${API_URL}/products`).then(res => res.json());
+
+export async function getBlogs() {
+  const res = await fetch(`${API_URL}/blogs`);
+  if (!res.ok) throw new Error("Failed to fetch blogs");
+  return res.json();
+}

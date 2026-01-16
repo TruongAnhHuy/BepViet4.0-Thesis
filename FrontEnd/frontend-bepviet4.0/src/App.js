@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Sidebar from './components/Sidebar';
 import PostManagement from './pages/QuanLyBaiViet';
 import RecipeManagement from './pages/QuanLyCongThuc';
+import QuanLyToCao from './pages/QuanLyUserReport';
+import QuanLyUser from './pages/QuanLyUser';
 import './App.css';
 
 function App() {
@@ -17,13 +19,14 @@ function App() {
         <div className="content-area" style={{ flex: 1, marginLeft: '260px' }}>
           <Routes>
             {/* Mặc định vào trang quản lý bài viết hoặc trang chủ tùy bạn */}
-            <Route path="/" element={<Navigate to="/posts" />} />
+            
             
             <Route path="/posts" element={<PostManagement />} />
             <Route path="/recipes" element={<RecipeManagement />} />
-            
+            <Route path="/reports" element={<QuanLyToCao />} />
+            <Route path="/users" element={<QuanLyUser />} />
             {/* Thêm các Route khác sau này */}
-            <Route path="*" element={<h2>Trang chưa phát triển</h2>} />
+            
           </Routes>
         </div>
       </div>

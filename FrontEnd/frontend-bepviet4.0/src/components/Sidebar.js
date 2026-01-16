@@ -42,10 +42,18 @@ const Sidebar = () => {
             <li className={isActive('/recipes')}><FaUtensils className="icon" /> Quản lý công thức</li>
         </Link>
 
-        <li><FaCogs className="icon" /> Quản lý hệ thống</li>
+        <Link to="/settings" className="link-style">
+            <li className={isActive('/settings')}><FaCogs className="icon" /> Quản lý hệ thống</li>
+        </Link>
+      
+        <Link to="/reports" className="link-style">
+            <li className={isActive('/reports')}><FaExclamationTriangle className="icon" /> Quản lý tố cáo</li>
+        </Link>
 
-        <li><FaExclamationTriangle className="icon" /> Quản lý tố cáo</li>
-        <li><FaList className="icon" /> Quản lý danh mục</li>
+
+        <Link to="/category" className="link-style">
+            <li className={isActive('/category')}><FaList className="icon" /> Quản lý danh mục</li>
+        </Link>
       </ul>
 
       <div className="logout-btn">

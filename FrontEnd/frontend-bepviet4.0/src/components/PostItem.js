@@ -12,7 +12,7 @@ const PostItem = ({ post }) => {
       <div className="post-content">
         <div className="post-header">
           <h3>{post.title}</h3>
-          <span className="dots">...</span>
+          {/* <span className="dots">...</span> */}
         </div>
         
         <p className="post-desc">{post.description}</p>

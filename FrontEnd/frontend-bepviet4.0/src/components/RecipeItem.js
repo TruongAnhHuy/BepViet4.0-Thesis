@@ -10,7 +10,7 @@ const RecipeItem = ({ recipe }) => {
           <span className="recipe-id">RECIPE ID: {recipe.id}</span>
           <h3 className="recipe-title">{recipe.name}</h3>
         </div>
-        <button className="more-btn"><FaEllipsisV /></button>
+        {/* <button className="more-btn"><FaEllipsisV /></button> */}
       </div>
 
       {/* Image Area */}

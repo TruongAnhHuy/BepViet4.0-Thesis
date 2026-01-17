@@ -9,6 +9,7 @@ import AdminLayout from "./layout_admin/AdminLayout"; // <--- MỚI THÊM
 import Home from "./pages_user/Home";
 import Blog from "./pages_user/Blog";
 import Recipe from "./pages_user/Recipe";
+import CooBook from "./pages_user/CookBook";
 
 // 3. Import các trang Admin
 import PostManagement from "./layout_admin/PostManagement"; 
@@ -18,6 +19,7 @@ import QuanLyHeThong from './pages_admin/QuanLyHeThong';
 import Dashboard from './pages_admin/Dashboard';
 import RecipeManagement from "./pages_admin/QuanLyCongThuc";
 import RecipeDetail from "./pages_user/Chitietmonan";
+
 
 function App() {
   return (
@@ -41,7 +43,9 @@ function App() {
             <UserLayout> <RecipeDetail /> </UserLayout>
         } />
 
-
+        <Route path="/cookbook" element={
+            <UserLayout> <CooBook /> </UserLayout>
+        } />
 
         {/* --- NHÓM 2: TRANG ADMIN (Đã bọc AdminLayout) --- */}
         

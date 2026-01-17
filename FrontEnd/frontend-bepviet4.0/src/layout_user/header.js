@@ -11,11 +11,12 @@ export default function Header() {
   return (
     <nav className="navbar sticky-top m-0 p-0">
       <div className="container-fluid bg-warning bg-opacity d-flex justify-content-around align-items-center py-2">
-        <a href="/" className="navbar-brand fw-bold">Bếp việt 4.0</a>
+        <a href="/dashboard_user" className="navbar-brand fw-bold">Bếp việt 4.0</a>
         <a href="/recipes" className="navbar-brand fw-bold">Ẩm thực</a>
-        <a href="/" className="navbar-brand fw-bold"><i class="fa-solid fa-house"></i>Trang chủ</a>
+        <a href="/dashboard_user" className="navbar-brand fw-bold"><i class="fa-solid fa-house"></i>Trang chủ</a>
         <a href="/blog" className="navbar-brand fw-bold">Blog</a>
         <a href="/" className="navbar-brand fw-bold">Món ăn</a>
+        <a href="/cookbook" className="navbar-brand fw-bold">CookBook</a>
         {menu.map(item => (
           <a
             key={item.id}

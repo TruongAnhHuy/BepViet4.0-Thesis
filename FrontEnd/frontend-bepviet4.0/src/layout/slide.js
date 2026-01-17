@@ -1,3 +1,4 @@
+//goi ys mon an noi bat hay trinh chieu mon an 
 export default function Slide() {
   return (
     <div

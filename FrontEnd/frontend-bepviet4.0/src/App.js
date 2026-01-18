@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 
@@ -20,10 +21,22 @@ import Dashboard from './pages_admin/Dashboard';
 import RecipeManagement from "./pages_admin/QuanLyCongThuc";
 import RecipeDetail from "./pages_user/Chitietmonan";
 
+=======
+// src/App.js
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Sidebar from './components/Sidebar';
+import PostManagement from './pages/QuanLyBaiViet';
+import RecipeManagement from './pages/QuanLyCongThuc';
+import QuanLyToCao from './pages/QuanLyUserReport';
+import QuanLyUser from './pages/QuanLyUser';
+import './App.css';
+>>>>>>> 6323395700f6f2af7cd15480ede84e065160d208
 
 function App() {
   return (
     <Router>
+<<<<<<< HEAD
       <Routes>
         
         {/* --- NHÓM 1: TRANG NGƯỜI DÙNG (Dùng UserLayout) --- */}
@@ -73,6 +86,22 @@ function App() {
         } />
 
       </Routes>
+=======
+      <div className="app-container">
+        <Sidebar />
+
+        <div className="content-area" style={{ flex: 1, marginLeft: '260px' }}>
+          <Routes>
+            
+            <Route path="/posts" element={<PostManagement />} />
+            <Route path="/recipes" element={<RecipeManagement />} />
+            <Route path="/reports" element={<QuanLyToCao />} />
+            <Route path="/users" element={<QuanLyUser />} />
+
+          </Routes>
+        </div>
+      </div>
+>>>>>>> 6323395700f6f2af7cd15480ede84e065160d208
     </Router>
   );
 }

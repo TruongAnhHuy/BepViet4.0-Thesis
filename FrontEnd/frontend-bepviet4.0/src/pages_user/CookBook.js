@@ -40,19 +40,7 @@ const Cookbook = () => {
   return (
     <div className="cookbook-container">
       {/* --- Phần Hero và Filter giữ nguyên --- */}
-      <section className="hero-banner">
-        <div className="hero-content">
-          <span className="badge">CÔNG THỨC CỦA HÔM NAY</span>
-          <h1>Bún Chả Hanoi</h1>
-          <p>Hương vị truyền thống...</p>
-          <button className="btn-primary">Nấu ngay &rarr;</button>
-        </div>
-        <div className="hero-image">
-           {/* Nếu muốn ảnh banner động thì cũng phải sửa src tương tự bên dưới */}
-           <div className="img-placeholder">Ảnh Bún Chả To</div> 
-        </div>
-      </section>
-
+      
       <section className="filter-bar">
         <h3>Xu hướng ở Sài Gòn</h3>
         <div className="filter-buttons">

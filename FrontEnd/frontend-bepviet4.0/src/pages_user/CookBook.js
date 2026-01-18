@@ -1,78 +1,110 @@
 import { useEffect, useState } from "react";
+import { getCookBook } from "../services/api";
 import { getRecipes } from "../services/api";
+import "../styles/CookBook.css";
 
 const Cookbook = () => {
-  // Mock data mô phỏng dữ liệu từ Laravel API trả về
-  const [recipes, setRecipes] = useState([
-    { id: 1, title: 'Gỏi Cuốn (Summer Rolls)', time: '30 mins', image: 'url_to_goi_cuon', type: 'recipe' },
-    { id: 2, title: 'Bánh Mì Patê', time: '15 mins', image: 'url_to_banh_mi', type: 'recipe' },
-    { id: 3, title: 'Bánh Xèo (Sizzling Pancake)', time: '45 mins', image: 'url_to_banh_xeo', type: 'recipe' },
-    { id: 4, title: 'Câu chuyện Nước Mắm', desc: 'Nước mắm là linh hồn...', type: 'story' }, // Card đặc biệt
-    { id: 5, title: 'Cà Phê Trứng', time: '10 mins', image: 'url_to_cafe', type: 'recipe' },
-    { id: 6, title: 'Phở Bò', time: '2 hours', image: 'url_to_pho', type: 'recipe' },
-  ]);
+  const [cook, setCookBook] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        // 2. Gọi hàm getRecipes thay vì getCookBook
+        const data = await getRecipes(); 
+        
+        // Kiểm tra dữ liệu trả về để set state cho đúng
+        if (Array.isArray(data)) {
+           setCookBook(data);
+        } else if (data.data && Array.isArray(data.data)) {
+           setCookBook(data.data);
+        } else {
+           setCookBook([]);
+        }
+      } catch (err) {
+        console.error("Lỗi:", err);
+        setError("Không thể tải dữ liệu.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <div className="text-center p-5">⏳ Đang tải...</div>;
+  if (error) return <div className="text-center p-5 text-red-500">❌ {error}</div>;
 
   return (
     <div className="cookbook-container">
-      {/* 1. Hero Section: Banner nổi bật giống Bún Chả Hanoi */}
+      {/* --- Phần Hero và Filter giữ nguyên --- */}
       <section className="hero-banner">
         <div className="hero-content">
           <span className="badge">CÔNG THỨC CỦA HÔM NAY</span>
           <h1>Bún Chả Hanoi</h1>
-          <p>
-            Bún chả là sự kết hợp hài hòa giữa thịt nướng tẩm ướp đậm đà, 
-            bún tươi và nước chấm chua ngọt. Một hương vị của thủ đô.
-          </p>
+          <p>Hương vị truyền thống...</p>
           <button className="btn-primary">Nấu ngay &rarr;</button>
         </div>
         <div className="hero-image">
-          {/* Thay bằng thẻ <img /> thực tế của bạn */}
-          <div className="img-placeholder">Ảnh Bún Chả To</div> 
+           {/* Nếu muốn ảnh banner động thì cũng phải sửa src tương tự bên dưới */}
+           <div className="img-placeholder">Ảnh Bún Chả To</div> 
         </div>
       </section>
 
-      {/* 2. Filter Section: Thanh lọc danh mục */}
       <section className="filter-bar">
         <h3>Xu hướng ở Sài Gòn</h3>
         <div className="filter-buttons">
           <button className="active">Tất cả</button>
           <button>Phổ biến</button>
-          <button>Đường phố</button>
-          <button>Khai vị</button>
         </div>
       </section>
 
-      {/* 3. Grid Section: Danh sách món ăn */}
-      <section className="recipe-grid">
-        {recipes.map((item) => (
-          <div key={item.id} className={`recipe-card ${item.type === 'story' ? 'story-card' : ''}`}>
-            
-            {item.type === 'recipe' ? (
-              <>
-                <div className="card-image">
-                  {/* <img src={item.image} alt={item.title} /> */}
-                  <div className="img-placeholder-small">Ảnh Món</div>
-                  <span className="heart-icon">♡</span>
-                </div>
-                <div className="card-info">
-                  <h4>{item.title}</h4>
-                  <p className="meta-time">⏱ {item.time}</p>
-                </div>
-              </>
-            ) : (
-              /* Layout cho thẻ "Story" (như thẻ Nước mắm/Phở) */
-              <div className="story-content">
-                <span className="icon-brand">♨</span>
-                <h4>"{item.title}"</h4>
-                <p>{item.desc}</p>
-                <a href="#">ĐỌC CÂU CHUYỆN</a>
+      {/* --- Phần Hiển thị Danh sách (Đã sửa logic) --- */}
+      <section className="cookbook-grid">
+        {cook.length > 0 ? (
+          cook.map((item) => (
+            // 3. Sửa Key: Dùng recipe_id thay vì id
+            <div key={item.recipe_id} className="cookbook-card">
+              
+              {/* Lưu ý: Tạm thời bỏ qua logic 'type' === story nếu DB chưa có cột type.
+                  Mặc định hiển thị dạng Recipe cho tất cả. */}
+              
+              <div className="card-image">
+                {/* 4. Sửa đường dẫn ảnh: Copy y hệt từ trang Recipe sang */}
+                <img 
+                  src={`http://127.0.0.1:8000/storage/${item.image_path}`} 
+                  alt={item.title}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.src = "https://via.placeholder.com/300?text=No+Image"; // Ảnh thay thế nếu lỗi
+                  }}
+                />
+                <span className="heart-icon">♡</span>
               </div>
-            )}
-            
-          </div>
-        ))}
+
+              <div className="card-info">
+                {/* 5. Tên món ăn */}
+                <h4>{item.title}</h4>
+                
+                {/* 6. Thời gian nấu: Dùng cooking_time thay vì time */}
+                <p className="meta-time">
+                  ⏱ {item.cooking_time ? item.cooking_time + ' phút' : '---'}
+                </p>
+                
+                {/* Thêm mô tả nếu muốn giống trang Recipe */}
+                <p className="text-sm text-gray-500 line-clamp-2">
+                    {item.description}
+                </p>
+              </div>
+
+            </div>
+          ))
+        ) : (
+            <p>Chưa có công thức nào.</p>
+        )}
       </section>
-      
     </div>
   );
 };

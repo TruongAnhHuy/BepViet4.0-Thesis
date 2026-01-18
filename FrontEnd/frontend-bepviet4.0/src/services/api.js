@@ -13,6 +13,12 @@ export const getProducts = () =>
 export const getRecipes = () =>
   fetch(`${API_URL}/recipes`).then(res => res.json());
 
+export const getCookBook = () =>
+  fetch(`${API_URL}/cookbook`).then(res => res.json());
+
+export const getBlog = () =>
+  fetch(`${API_URL}/blog`).then(res => res.json());
+
 export async function getBlogs() {
   const res = await fetch(`${API_URL}/blogs`);
   if (!res.ok) throw new Error("Failed to fetch blogs");

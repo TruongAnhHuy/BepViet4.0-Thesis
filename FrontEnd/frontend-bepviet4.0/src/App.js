@@ -18,6 +18,7 @@ import QuanLyHeThong from './pages_admin/QuanLyHeThong';
 import Dashboard from './pages_admin/Dashboard';
 import RecipeManagement from "./pages_admin/QuanLyCongThuc";
 import RecipeDetail from "./pages_user/Chitietmonan";
+import CookBook from "./pages_user/CookBook";
 
 function App() {
   return (
@@ -41,7 +42,9 @@ function App() {
             <UserLayout> <RecipeDetail /> </UserLayout>
         } />
 
-
+        <Route path="/cookbook" element={
+            <UserLayout> <CookBook /> </UserLayout>
+        } />
 
         {/* --- NHÓM 2: TRANG ADMIN (Đã bọc AdminLayout) --- */}
         

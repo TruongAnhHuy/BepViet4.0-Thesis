@@ -43,10 +43,16 @@ const posts = [
   }
 ];
 const navigate =useNavigate();
-
+//dang xuat
+const handleLogout = () => {
+  //xoa trang thai dang nhap
+  localStorage.clear();
+  //dieu huong ve trang dang nhap(moi lafm test thu thoi)
+  navigate("/login", {replace :true});
+};
   return (
     <div className="row">
-     <div className="col-3 bg-light p-3 text-center">
+    <div className="col-3 bg-light p-3 text-center">
 
       {/* ẢNH AVATAR */}
       <img
@@ -60,21 +66,23 @@ const navigate =useNavigate();
         <p>{user.email}</p>
         <p>{user.phone}</p>
 
-<button 
-    className="btn btn-warning w-100 mb-2"
-    onClick={() =>navigate("/profile/edit")} >
+      <button 
+      className="btn btn-warning w-100 mb-2"
+      onClick={() =>navigate("/profile/edit")} >
         Chinh sua ho so 
-</button>
+      </button>
 {/* //doi mk */}
- <button
+      <button
         className="btn btn-warning w-100 mb-2"
         onClick={() => navigate("/profile/changepassword")}
->
-  Đổi mật khẩu
-</button>
-
-        <button className="btn btn-warning w-100">Đăng xuất</button>
-      </div>
+      >
+        Đổi mật khẩu
+      </button>
+{/* //dang xuat */}
+        <button className="btn btn-warning w-100 mb-2"
+        onClick={handleLogout}
+        >Đăng xuất</button>
+    </div>
 
       {/* Cột phải */}
       <div className="col-9">

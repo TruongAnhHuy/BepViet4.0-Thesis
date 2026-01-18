@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 .App {
 
   text-align: center;
@@ -151,45 +150,6 @@ body {
   padding: 0 20px;
   margin-bottom: 30px;
   color: #1e3a8a;
-=======
-/* Reset cơ bản */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-body {
-  background-color: #e5e7eb; /* Màu nền xám nhạt tổng thể */
-}
-
-/* Layout chia 2 cột: Sidebar và Main Content */
-.app-container {
-  display: flex;
-  min-height: 100vh;
-}
-
-/* --- SIDEBAR STYLING --- */
-.sidebar {
-  width: 260px;
-  background-color: #ffffff;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  position: fixed; /* Cố định sidebar */
-  height: 100vh;
-  left: 0;
-  top: 0;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.05);
-}
-
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 30px;
-  color: #1e3a8a; /* Màu xanh đậm */
->>>>>>> 6323395700f6f2af7cd15480ede84e065160d208
 }
 
 .logo-icon {
@@ -205,21 +165,15 @@ body {
   margin-right: 10px;
 }
 
-<<<<<<< HEAD
 .brand-text { font-size: 20px; font-weight: bold; }
 
-=======
->>>>>>> 6323395700f6f2af7cd15480ede84e065160d208
 .user-info {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 30px;
   text-align: center;
-<<<<<<< HEAD
   padding: 0 20px;
-=======
->>>>>>> 6323395700f6f2af7cd15480ede84e065160d208
 }
 
 .avatar {
@@ -227,23 +181,15 @@ body {
   height: 60px;
   border-radius: 50%;
   margin-bottom: 10px;
-<<<<<<< HEAD
   border: 2px solid #22c55e;
   object-fit: cover;
-=======
-  border: 2px solid #22c55e; /* Viền xanh lá biểu thị online */
->>>>>>> 6323395700f6f2af7cd15480ede84e065160d208
 }
 
 .user-text p { font-size: 12px; color: #6b7280; }
 .user-text strong { font-size: 14px; color: #1f2937; }
 
-<<<<<<< HEAD
 /* Menu List */
 .menu-list { list-style: none; flex: 1; padding: 0 10px; }
-=======
-.menu-list { list-style: none; flex: 1; }
->>>>>>> 6323395700f6f2af7cd15480ede84e065160d208
 
 .menu-list li {
   padding: 12px 15px;
@@ -254,7 +200,6 @@ body {
   display: flex;
   align-items: center;
   font-size: 14px;
-<<<<<<< HEAD
   font-weight: 500;
   transition: all 0.2s;
   text-decoration: none; /* Bỏ gạch chân nếu dùng thẻ Link */
@@ -268,25 +213,10 @@ body {
   background-color: #eff6ff;
   color: #3b82f6;
   font-weight: 700;
-=======
-  transition: all 0.2s;
-}
-
-.menu-list li .icon { margin-right: 12px; }
-
-.menu-list li:hover { background-color: #f3f4f6; }
-
-/* Trạng thái Active */
-.menu-list li.active {
-  background-color: #eff6ff;
-  color: #3b82f6;
-  font-weight: 600;
->>>>>>> 6323395700f6f2af7cd15480ede84e065160d208
 }
 
 .logout-btn {
   margin-top: auto;
-<<<<<<< HEAD
   color: #ef4444;
   cursor: pointer;
   display: flex;
@@ -302,214 +232,25 @@ body {
    ========================================= */
 .top-bar {
   height: 64px;
-=======
-  color: #ef4444; /* Màu đỏ */
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  font-weight: 500;
-}
-.logout-btn .icon { margin-right: 10px; }
-
-/* --- MAIN CONTENT STYLING --- */
-.main-content {
-  margin-left: 260px; /* Chừa chỗ cho sidebar */
-  flex: 1;
-  padding: 30px;
-  width: calc(100% - 260px);
-}
-
-/* Search Bar */
-.search-bar-container {
-  background: white;
-  padding: 12px 20px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  margin-bottom: 30px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.search-icon { color: #9ca3af; margin-right: 10px; }
-.search-input {
-  border: none;
-  outline: none;
-  width: 100%;
-  font-size: 14px;
-}
-
-.page-title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  color: #1f2937;
-}
-
-/* --- 1. KHUNG THẺ BÀI VIẾT --- */
-.post-card {
-  background: white;
-  border-radius: 12px;
-  padding: 20px; /* Tăng padding chút cho thoáng */
-  margin-bottom: 20px;
-  display: flex;
-  gap: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.03); /* Đổ bóng nhẹ hơn, sang hơn */
-  transition: all 0.3s ease;
-  border: 1px solid #f0f0f0; /* Thêm viền mờ */
-}
-
-.post-card:hover { 
-  transform: translateY(-3px); 
-  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-}
-
-/* --- 2. HÌNH ẢNH --- */
-.post-image img {
-  width: 160px;
-  height: 110px; /* Tăng chiều cao chút */
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-/* --- 3. NỘI DUNG --- */
-.post-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.post-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.post-header h3 {
-  font-size: 17px; /* Chữ to hơn xíu cho rõ tiêu đề */
-  font-weight: 700;
-  color: #1f2937;
-  margin: 0 0 8px 0;
-  line-height: 1.4;
-}
-
-.post-desc {
-  font-size: 14px;
-  color: #6b7280;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* Giới hạn 2 dòng */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin-bottom: 15px;
-}
-
-/* --- 4. CHÂN THẺ (Footer) --- */
-.post-footer {
-  display: flex;
-  justify-content: space-between; /* Đẩy Badge sang phải, Meta sang trái */
-  align-items: center;
-  margin-top: auto; /* Đẩy xuống đáy */
-}
-
-/* Thông tin ngày giờ, view */
-.post-meta {
-  font-size: 13px;
-  color: #9ca3af;
-  display: flex;
-  gap: 15px; /* Khoảng cách giữa giờ và view */
-  align-items: center;
-}
-
-/* --- BADGE TRẠNG THÁI (STYLE ĐẬM ĐÀ) --- */
-.status-badge {
-  display: inline-block;      
-  padding: 8px 20px;          /* Đệm dày cho giống cái nút */
-  min-width: 110px;           
-  text-align: center;         
-  
-  border-radius: 30px;        
-  font-size: 12px;
-  font-weight: 800;           
-  text-transform: uppercase;  
-  
-  /* Quan trọng: Bỏ viền cũ đi để nhìn nó liền mạch */
-  border: none !important;    
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
-  color: #ffffff !important;  /* Chữ bắt buộc màu trắng */
-}
-
-/* MÀU VÀNG CAM (Rực rỡ) */
-.status-yellow {
-  background-color: #f59e0b !important; /* Màu cam vàng đậm */
-}
-
-/* MÀU XANH LÁ (Tươi tắn) */
-.status-green {
-  background-color: #10b981 !important; /* Màu xanh ngọc đậm */
-}
-
-/* Nếu bạn muốn "Đã đăng" cũng màu vàng thì đổi class bên React thành status-yellow luôn */
-
-/* --- LAYOUT WRAPPER MỚI --- */
-.main-content-wrapper {
-  margin-left: 260px; /* Bằng chiều rộng Sidebar */
-  flex: 1;
-  background-color: #f3f4f6; /* Màu nền xám nhạt */
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* --- TOP BAR --- */
-.top-bar {
-  height: 60px;
->>>>>>> 6323395700f6f2af7cd15480ede84e065160d208
   background: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 30px;
-<<<<<<< HEAD
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
   flex-shrink: 0; /* Không bị co lại */
 }
 
 .top-bar-title {
   font-size: 18px;
-=======
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-
-.top-bar-left, .top-bar-right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.top-bar-title {
-  font-size: 16px;
->>>>>>> 6323395700f6f2af7cd15480ede84e065160d208
   font-weight: 700;
   color: #374151;
 }
 
-<<<<<<< HEAD
-=======
-.menu-btn {
-  background: none;
-  border: none;
-  font-size: 18px;
-  color: #6b7280;
-  cursor: pointer;
-}
-
->>>>>>> 6323395700f6f2af7cd15480ede84e065160d208
 .top-icon {
   font-size: 20px;
   color: #6b7280;
   cursor: pointer;
-<<<<<<< HEAD
   margin-left: 15px;
 }
 
@@ -1131,106 +872,6 @@ body {
   pointer-events: none;
 }
 
-=======
-}
-
-/* --- SEARCH BAR CENTER --- */
-.page-content {
-  padding: 30px 10%; /* Padding lớn để nội dung co vào giữa như thiết kế */
-}
-
-.search-container-center {
-  position: relative;
-  background: white;
-  border-radius: 20px; /* Bo tròn nhiều hơn */
-  padding: 12px 20px;
-  margin-bottom: 30px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  display: flex;
-  align-items: center;
-}
-
-.search-container-center input {
-  width: 100%;
-  border: none;
-  outline: none;
-  font-size: 14px;
-}
-
-.search-icon-right {
-  color: #9ca3af;
-  cursor: pointer;
-}
-
-/* --- RECIPE CARD STYLING --- */
-.recipe-card {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.recipe-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 15px;
-}
-
-.recipe-id {
-  display: block;
-  font-size: 10px;
-  font-weight: 700;
-  color: #9ca3af;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-
-.recipe-title {
-  font-size: 18px;
-  color: #1f2937;
-  font-weight: 700;
-}
-
-.more-btn {
-  background: none;
-  border: none;
-  color: #9ca3af;
-  cursor: pointer;
-}
-
-/* Image styling */
-.recipe-image-container {
-  width: 100%;
-  height: 140px;
-  background-color: #6b7280; /* Placeholder color */
-  border-radius: 8px;
-  margin-bottom: 15px;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.recipe-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.8; /* Làm tối ảnh một chút như thiết kế */
-}
-
-.overlay-text {
-  position: absolute;
-  color: rgba(255,255,255,0.7);
-  font-size: 14px;
-  font-weight: 500;
-  z-index: 2;
-  pointer-events: none;
-}
-
->>>>>>> 6323395700f6f2af7cd15480ede84e065160d208
 /* Footer styling */
 .recipe-footer {
   display: flex;
@@ -1763,11 +1404,3 @@ color: #333;
   margin-top: 10px;
   font-size: 13px;
 }
-
-<<<<<<< HEAD
-/* =========================================
-   3. Cookbook
-   ========================================= */
-   
-=======
->>>>>>> 6323395700f6f2af7cd15480ede84e065160d208

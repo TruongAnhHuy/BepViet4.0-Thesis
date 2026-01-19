@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import TopBar from '../layout_admin/TopBar';
-// Import thêm icon
 import { FaUsers, FaFileAlt, FaUtensils, FaSpinner, FaFolder, FaComments } from 'react-icons/fa';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import axiosClient from '../api/axiosClient';
-// 1. Import useNavigate để chuyển hướng trang
 import { useNavigate } from 'react-router-dom';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF1919'];
@@ -20,46 +18,47 @@ const Dashboard = () => {
 
   const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // 2. Khởi tạo biến điều hướng
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 3. KIỂM TRA ĐĂNG NHẬP NGAY LẬP TỨC
     const checkLoginAndFetchData = async () => {
-      // Kiểm tra token trong bộ nhớ
       const token = localStorage.getItem('token');
       
-      // Nếu không có token -> Đá về trang Login ngay
       if (!token) {
         navigate('/login');
-        return; // Dừng chạy code phía dưới
+        return;
       }
 
       setLoading(true);
       try {
         const res = await axiosClient.get('/dashboard-stats');
         
-        if (res.data) {
-          setStats(res.data.counts);
-          
-          if (res.data.chart_data && res.data.chart_data.length > 0) {
-             setChartData(res.data.chart_data);
+        // --- SỬA LỖI TẠI ĐÂY ---
+        // axiosClient đã trả về data rồi, nên 'res' chính là object chứa counts và chart_data
+        // Không dùng res.data.counts nữa mà dùng trực tiếp res.counts
+        
+        if (res) {
+          // Cập nhật thống kê
+          if (res.counts) {
+             setStats(res.counts);
+          }
+
+          // Cập nhật biểu đồ
+          if (res.chart_data && res.chart_data.length > 0) {
+             setChartData(res.chart_data);
           } else {
-             // Dữ liệu mẫu nếu chưa có dữ liệu thật (để test giao diện)
+             // Dữ liệu mẫu nếu DB chưa có category nào
              setChartData([
-                { name: 'Món Chay', value: 5 },
-                { name: 'Món Mặn', value: 12 },
-                { name: 'Tráng Miệng', value: 8 }
+                { name: 'Món Chay', value: 0 },
+                { name: 'Món Mặn', value: 0 },
              ]);
           }
         }
+
       } catch (error) {
         console.error("Lỗi lấy dữ liệu:", error);
-        
-        // 4. Nếu API trả về lỗi 401 (Hết hạn phiên đăng nhập) -> Cũng đá về Login
         if (error.response && error.response.status === 401) {
-            localStorage.removeItem('token'); // Xóa token cũ lỗi
+            localStorage.removeItem('token');
             navigate('/login');
         }
       } finally {
@@ -68,7 +67,7 @@ const Dashboard = () => {
     };
 
     checkLoginAndFetchData();
-  }, [navigate]); // Thêm navigate vào dependency
+  }, [navigate]);
 
   return (
     <>
@@ -82,7 +81,6 @@ const Dashboard = () => {
               gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
               gap: '20px' 
           }}>
-            {/* Logic hiển thị các thẻ thống kê giữ nguyên */}
             {[
                 { id: 1, title: "Người dùng", count: stats.users, icon: <FaUsers />, color: "#3498db" },
                 { id: 2, title: "Công thức", count: stats.recipes, icon: <FaUtensils />, color: "#e67e22" },

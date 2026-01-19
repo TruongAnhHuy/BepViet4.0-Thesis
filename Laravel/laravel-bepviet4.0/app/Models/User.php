@@ -2,47 +2,36 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    // --- SỬA ĐIỂM 1: KHÓA CHÍNH ---
+    // Vì trong SQL cột là 'id', nên bạn hãy XÓA hoặc COMMENT dòng này đi
+    // protected $primaryKey = 'user_id';  <-- XÓA DÒNG NÀY (Laravel mặc định hiểu là 'id')
+
+    // --- SỬA ĐIỂM 2: FILLABLE ---
+    // Phải có 'username' để khớp với SQL và Code React
     protected $fillable = [
-        'name',
+        'username', // Quan trọng: Phải là username, không phải name
         'email',
         'password',
+        'avatar',
+        'status',
+        'role_id',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
 }

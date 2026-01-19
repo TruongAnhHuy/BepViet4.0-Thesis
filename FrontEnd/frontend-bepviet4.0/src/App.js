@@ -9,6 +9,12 @@ import AdminLayout from "./layout_admin/AdminLayout"; // <--- MỚI THÊM
 import Home from "./pages_user/Home";
 import Blog from "./pages_user/Blog";
 import Recipe from "./pages_user/Recipe";
+import RecipeDetail from "./pages_user/Chitietmonan";
+import Login from "./pages_user/Login";
+import Register from "./pages_user/Register";
+import CookBook from "./pages_user/CookBook";
+import ProfileUser from "./pages_user/Profile";
+import EditProfile from "./pages_user/EditProfile";
 
 // 3. Import các trang Admin
 import PostManagement from "./layout_admin/PostManagement"; 
@@ -17,7 +23,7 @@ import QuanLyUser from './pages_admin/QuanLyUser';
 import QuanLyHeThong from './pages_admin/QuanLyHeThong'; 
 import Dashboard from './pages_admin/Dashboard';
 import RecipeManagement from "./pages_admin/QuanLyCongThuc";
-import RecipeDetail from "./pages_user/Chitietmonan";
+import ChangePassword from "./pages_user/ChangePassword";
 
 function App() {
   return (
@@ -33,15 +39,32 @@ function App() {
             <UserLayout> <Recipe /> </UserLayout>
         } />
 
+        <Route path="/recipe/:id" element={
+           <UserLayout> <RecipeDetail /> </UserLayout> 
+        } />
+
         <Route path="/blog" element={
             <UserLayout> <Blog /> </UserLayout>
         } />
 
-        <Route path="/detail" element={
-            <UserLayout> <RecipeDetail /> </UserLayout>
+        
+
+        <Route path="/login" element={<Login />} />
+        
+        <Route path="/register" element={<Register />} />
+
+        <Route path="/cookbook" element={
+            <UserLayout> <CookBook /> </UserLayout>
         } />
-
-
+        <Route path="/profile" element={
+           <UserLayout> <ProfileUser /> </UserLayout>
+        } />
+        <Route path="/profile/edit" element={
+           <UserLayout> <EditProfile /> </UserLayout> 
+        } />
+        <Route path="/profile/changepassword" element={
+           <UserLayout> <ChangePassword /> </UserLayout> 
+        } />
 
         {/* --- NHÓM 2: TRANG ADMIN (Đã bọc AdminLayout) --- */}
         

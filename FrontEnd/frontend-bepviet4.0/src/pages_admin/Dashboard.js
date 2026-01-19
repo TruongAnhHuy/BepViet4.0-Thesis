@@ -1,99 +1,156 @@
-import React from 'react';
-import TopBar from '../layout_admin/TopBar'; // Đảm bảo đường dẫn đúng
-import { FaUsers, FaFileAlt, FaUtensils } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import TopBar from '../layout_admin/TopBar';
+// Import thêm icon
+import { FaUsers, FaFileAlt, FaUtensils, FaSpinner, FaFolder, FaComments } from 'react-icons/fa';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import axiosClient from '../api/axiosClient';
+// 1. Import useNavigate để chuyển hướng trang
+import { useNavigate } from 'react-router-dom';
 
-// --- DỮ LIỆU GIẢ CHO CÁC THẺ THỐNG KÊ (Khớp với hình ảnh) ---
-const statsData = [
-  {
-    id: 1,
-    title: "Người dùng",
-    count: "1,250",
-    icon: <FaUsers />,
-    color: "#e67e22" // Màu icon
-  },
-  {
-    id: 2,
-    title: "Bài viết",
-    count: "450",
-    icon: <FaFileAlt />,
-    color: "#2ecc71"
-  },
-  {
-    id: 3,
-    title: "Công thức",
-    count: "89",
-    icon: <FaUtensils />,
-    color: "#3498db"
-  }
-];
-
-// --- DỮ LIỆU GIẢ CHO BIỂU ĐỒ TRÒN (5 Thành phần ẩm thực) ---
-const culinaryData = [
-  { name: 'Món Khai Vị', value: 15 },
-  { name: 'Món Chính', value: 45 },
-  { name: 'Món Tráng Miệng', value: 20 },
-  { name: 'Đồ Uống', value: 10 },
-  { name: 'Ăn Vặt', value: 10 },
-];
-
-// Màu sắc cho từng phần của biểu đồ
-const COLORS = ['#FF8042', '#0088FE', '#00C49F', '#FFBB28', '#8884d8'];
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF1919'];
 
 const Dashboard = () => {
+  const [stats, setStats] = useState({
+    users: 0,
+    recipes: 0,
+    posts: 0,
+    categories: 0,
+    comments: 0
+  });
+
+  const [chartData, setChartData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // 2. Khởi tạo biến điều hướng
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // 3. KIỂM TRA ĐĂNG NHẬP NGAY LẬP TỨC
+    const checkLoginAndFetchData = async () => {
+      // Kiểm tra token trong bộ nhớ
+      const token = localStorage.getItem('token');
+      
+      // Nếu không có token -> Đá về trang Login ngay
+      if (!token) {
+        navigate('/login');
+        return; // Dừng chạy code phía dưới
+      }
+
+      setLoading(true);
+      try {
+        const res = await axiosClient.get('/dashboard-stats');
+        
+        if (res.data) {
+          setStats(res.data.counts);
+          
+          if (res.data.chart_data && res.data.chart_data.length > 0) {
+             setChartData(res.data.chart_data);
+          } else {
+             // Dữ liệu mẫu nếu chưa có dữ liệu thật (để test giao diện)
+             setChartData([
+                { name: 'Món Chay', value: 5 },
+                { name: 'Món Mặn', value: 12 },
+                { name: 'Tráng Miệng', value: 8 }
+             ]);
+          }
+        }
+      } catch (error) {
+        console.error("Lỗi lấy dữ liệu:", error);
+        
+        // 4. Nếu API trả về lỗi 401 (Hết hạn phiên đăng nhập) -> Cũng đá về Login
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('token'); // Xóa token cũ lỗi
+            navigate('/login');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkLoginAndFetchData();
+  }, [navigate]); // Thêm navigate vào dependency
+
   return (
-    <div className="main-content-wrapper" style={{marginLeft: 0, width: '100%'}}>
-        {/* Top Bar */}
+    <>
         <TopBar title="Tổng quan hệ thống" />
 
-        {/* Nội dung chính */}
         <div className="page-content">
           
-          {/* 1. Phần Thống Kê (3 Thẻ) */}
-          <div className="dashboard-stats">
-            {statsData.map((item) => (
-              <div key={item.id} className="stat-card">
+          {/* Phần Thống Kê */}
+          <div className="dashboard-stats" style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+              gap: '20px' 
+          }}>
+            {/* Logic hiển thị các thẻ thống kê giữ nguyên */}
+            {[
+                { id: 1, title: "Người dùng", count: stats.users, icon: <FaUsers />, color: "#3498db" },
+                { id: 2, title: "Công thức", count: stats.recipes, icon: <FaUtensils />, color: "#e67e22" },
+                { id: 3, title: "Bài viết", count: stats.posts, icon: <FaFileAlt />, color: "#2ecc71" },
+                { id: 4, title: "Danh mục", count: stats.categories, icon: <FaFolder />, color: "#9b59b6" },
+                { id: 5, title: "Bình luận", count: stats.comments, icon: <FaComments />, color: "#e74c3c" }
+            ].map((item) => (
+              <div key={item.id} className="stat-card" style={{
+                  background: '#fff', 
+                  padding: '20px', 
+                  borderRadius: '10px', 
+                  boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+              }}>
                 <div className="stat-info">
-                  <span className="stat-title">{item.title}</span>
-                  <h3 className="stat-count">{item.count}</h3>
+                  <span className="stat-title" style={{color: '#888', fontSize: '14px'}}>{item.title}</span>
+                  <h3 className="stat-count" style={{fontSize: '24px', fontWeight: 'bold', margin: '5px 0 0'}}>
+                    {loading ? <FaSpinner className="fa-spin" style={{fontSize: '1rem'}}/> : item.count}
+                  </h3>
                 </div>
-                <div className="stat-icon" style={{ color: item.color }}>
+                <div className="stat-icon" style={{ color: item.color, fontSize: '2rem', opacity: 0.8 }}>
                   {item.icon}
                 </div>
               </div>
             ))}
           </div>
 
-          {/* 2. Phần Biểu Đồ */}
-          <div className="chart-section">
-            <h3 className="chart-title">Thống kê danh mục ẩm thực</h3>
+          {/* Phần Biểu Đồ */}
+          <div className="chart-section" style={{marginTop: '30px', background: '#fff', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)'}}>
+            <h3 className="chart-title" style={{marginBottom: '20px', fontSize: '18px', fontWeight: '600'}}>Phân bố công thức theo danh mục</h3>
             <div className="chart-container">
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={culinaryData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={100}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {culinaryData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
-</ResponsiveContainer>
+              <ResponsiveContainer width="100%" height={350}>
+                {loading ? (
+                   <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: '#999'}}>
+                      <FaSpinner className="fa-spin" size={30}/>
+                   </div>
+                ) : chartData.length > 0 ? (
+                  <PieChart>
+                    <Pie
+                      data={chartData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={true}
+                      label={({ name, value }) => `${name} (${value})`}
+                      outerRadius={120}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {chartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value) => [value, 'Số lượng']} />
+                    <Legend />
+                  </PieChart>
+                ) : (
+                  <div style={{textAlign: 'center', padding: '50px', color: '#999'}}>
+                      Chưa có dữ liệu danh mục để vẽ biểu đồ
+                  </div>
+                )}
+              </ResponsiveContainer>
             </div>
-            <p className="chart-note">Biểu đồ phân bố tỉ lệ các loại công thức trên hệ thống</p>
           </div>
 
         </div>
-    </div>
+    </>
   );
 };
 

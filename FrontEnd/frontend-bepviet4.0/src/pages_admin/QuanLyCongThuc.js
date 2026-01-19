@@ -21,7 +21,7 @@ const RecipeManagement = () => {
           status: "Đã duyệt"            
         }));
 
-        
+
         setRecipes(formattedData);         
         setFilteredRecipes(formattedData); 
         setLoading(false);
@@ -53,8 +53,6 @@ const RecipeManagement = () => {
         return recipe;
     });
     setFilteredRecipes(updatedFiltered);
-
-
   }
 
   // --- HÀM TÌM KIẾM ĐÃ SỬA LỖI CRASH ---

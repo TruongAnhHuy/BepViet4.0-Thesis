@@ -21,6 +21,7 @@ const RecipeManagement = () => {
           status: "Đã duyệt"            
         }));
 
+        
         setRecipes(formattedData);         
         setFilteredRecipes(formattedData); 
         setLoading(false);

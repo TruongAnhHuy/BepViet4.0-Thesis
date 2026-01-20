@@ -1,0 +1,53 @@
+/* QuanLyCongThuc.css */
+
+.main-content-wrapper {
+ margin-left: 0;
+ width: 100%;
+ background-color: #f5f7fa;
+ min-height: 100vh;
+}
+
+.page-content {
+ padding: 20px 40px;
+}
+
+.search-section {
+ display: flex;
+ justify-content: center;
+ margin-bottom: 30px;
+}
+
+.search-container {
+ background: white;
+ width: 100%;
+ max-width: 800px;
+ padding: 12px 20px;
+ border-radius: 50px;
+ display: flex;
+ align-items: center;
+ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.search-input {
+ border: none;
+ flex: 1;
+ outline: none;
+ font-size: 14px;
+ color: #555;
+}
+
+.search-icon {
+ color: #999;
+ cursor: pointer;
+}
+
+.recipe-list {
+ display: flex;
+ flex-direction: column;
+ gap: 20px;
+ align-items: center;
+}
+
+.no-results {
+ color: #888;
+}

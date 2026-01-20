@@ -19,35 +19,46 @@ const Login = () => {
     setErrorMessage('');
 
     try {
-      const res = await axiosClient.post('/login', { email, password });
-      localStorage.setItem('token', res.data.access_token);
-      localStorage.setItem('user', JSON.stringify(res.data.user));
+      // --- SỬA LẦN 1: Điền thẳng link server để tránh lỗi gọi nhầm cổng 3000 ---
+      const res = await axiosClient.post('http://127.0.0.1:8000/api/login', { email, password });
+      
+      // --- SỬA LẦN 2: Bỏ ".data" thừa (Vì axiosClient đã xử lý rồi) ---
+      // Code cũ: res.data.access_token -> Code mới: res.access_token
+      if (res && res.access_token) {
+          localStorage.setItem('token', res.access_token);
+          localStorage.setItem('user', JSON.stringify(res.user));
 
-      if (res.data.user.role_id === 1) {
-        navigate('/dashboard');
+          // Kiểm tra quyền và chuyển hướng
+          if (res.user && res.user.role_id === 1) {
+            navigate('/dashboard');
+          } else {
+            navigate('/dashboard_user'); // Hoặc trang chủ
+          }
       } else {
-        navigate('/dashboard_user');
+          setErrorMessage('Phản hồi từ server không hợp lệ.');
       }
+
     } catch (error) {
+      console.error("Login Error:", error);
       if (error.response && error.response.data) {
         setErrorMessage(error.response.data.message || 'Đăng nhập thất bại.');
       } else {
-        setErrorMessage('Lỗi kết nối server.');
+        setErrorMessage('Lỗi kết nối server (Kiểm tra lại Laravel đang chạy chưa).');
       }
     } finally {
       setLoading(false);
     }
   };
 
-  // Style chung cho ô nhập liệu để tái sử dụng
+  // --- Style (Giữ nguyên như cũ) ---
   const inputWrapperStyle = {
     display: 'flex',
     alignItems: 'center',
     background: '#fff',
-    borderRadius: '30px', // Bo tròn giống hình cũ
+    borderRadius: '30px', 
     padding: '10px 15px',
     border: '1px solid #ddd',
-    width: '100%',         // QUAN TRỌNG: Ép chiều rộng 100%
+    width: '100%', 
     marginBottom: '15px',
     boxSizing: 'border-box'
   };
@@ -55,7 +66,7 @@ const Login = () => {
   const inputStyle = {
     border: 'none',
     outline: 'none',
-    width: '100%',        // QUAN TRỌNG: Input chiếm hết chỗ trống
+    width: '100%',
     background: 'transparent',
     fontSize: '16px',
     color: '#333'
@@ -121,7 +132,7 @@ const Login = () => {
               padding: '12px',
               borderRadius: '30px',
               border: 'none',
-              backgroundColor: '#87CEEB', // Màu xanh nhạt giống hình
+              backgroundColor: '#87CEEB', 
               color: '#000',
               fontWeight: 'bold',
               cursor: loading ? 'not-allowed' : 'pointer',

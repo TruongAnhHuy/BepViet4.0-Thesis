@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\RecipeController;
+use App\Http\Controllers\Api\PostController;
 
 Route::get('/products', [ProductController::class, 'index']);
 
@@ -25,8 +26,13 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::apiResource('users', UserController::class);
 
+Route::get('/posts', [PostController::class, 'index']);
+
 Route::get('/recipes', [RecipeController::class, 'index']);
 Route::get('/recipes/{id}', [RecipeController::class, 'show']);
+
+Route::put('/recipes/{id}/status', [RecipeController::class, 'updateStatus']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
     

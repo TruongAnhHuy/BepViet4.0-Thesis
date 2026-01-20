@@ -33,3 +33,20 @@ export const getRecipeById = (id) => {
 export const getUsers = () => {
     return axiosClient.get('/users');
 };
+export const updateRecipeStatus = async (id, newStatus) => {
+    // Chuyển đổi text tiếng Việt sang giá trị Database hiểu (nếu cần)
+    // Ví dụ: Backend cần số 1 hoặc 0
+    const statusValue = newStatus === "Đã duyệt" ? 1 : 0; 
+
+    // Gọi API (Đường dẫn này phải khớp với route Laravel của bạn)
+    const response = await fetch(`http://127.0.0.1:8000/api/recipes/${id}/status`, {
+        method: 'PUT', // Hoặc POST tùy backend
+        headers: {
+            'Content-Type': 'application/json',
+            // 'Authorization': 'Bearer ...' // Nếu có token
+        },
+        body: JSON.stringify({ status: statusValue })
+    });
+
+    return response.json();
+};

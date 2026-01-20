@@ -1,0 +1,125 @@
+.recipe-card {
+   background: white;
+   width: 100%;
+   max-width: 800px;
+   border-radius: 8px;
+   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+   padding: 20px;
+   display: flex;
+   flex-direction: column;
+   gap: 15px;
+   position: relative; /* Để dropdown không bị che */
+}
+.recipe-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: flex-start;
+}
+
+.recipe-id {
+   font-size: 12px;
+   color: #999;
+   text-transform: uppercase;
+   display: block;
+   margin-bottom: 5px;
+}
+
+.recipe-title {
+   font-size: 18px;
+   font-weight: 600;
+   margin: 0;
+   color: #333;
+}
+.menu-dots {
+   cursor: pointer;
+   color: #999;
+   font-size: 20px;
+}
+
+.image-placeholder {
+   width: 100%;
+   height: 150px;
+   background-color: #6c757d;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: white;
+   border-radius: 4px;
+   overflow: hidden;
+}
+
+.image-placeholder img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+}
+
+.recipe-footer {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-top: 10px;
+}
+.author-badge {
+   background: #e6f9ed;
+   color: #28a745;
+   padding: 5px 10px;
+   border-radius: 4px;
+   font-size: 12px;
+   font-weight: bold;
+}
+
+/* --- STYLE CHO NÚT TRẠNG THÁI --- */
+.status-wrapper {
+   position: relative;
+}
+
+.status-btn {
+   border: none;
+   padding: 8px 16px;
+   border-radius: 4px;
+   color: white;
+   font-size: 12px;
+   font-weight: bold;
+   cursor: pointer;
+   text-transform: uppercase;
+   transition: background 0.3s;
+   min-width: 100px;
+}
+
+/* Màu Xanh cho Đã duyệt */
+.status-btn.approved {
+   background-color: #28a745; /* Màu xanh lá */
+}
+/* Màu Cam cho Chờ duyệt */
+.status-btn.pending {
+   background-color: #f39c12; /* Màu cam */
+}
+
+/* --- STYLE CHO DROPDOWN MENU --- */
+.status-dropdown {
+   position: absolute;
+   bottom: 100%; /* Hiện lên phía trên nút */
+   right: 0;
+   background: #343a40; /* Màu nền tối giống video */
+   border-radius: 4px;
+   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+   z-index: 100;
+   overflow: hidden;
+   margin-bottom: 5px;
+   min-width: 120px;
+}
+
+.dropdown-item {
+   padding: 10px 15px;
+   color: white;
+   font-size: 12px;
+   cursor: pointer;
+   transition: background 0.2s;
+   text-transform: uppercase;
+   white-space: nowrap;
+}
+
+.dropdown-item:hover {
+   background-color: #495057;
+}

@@ -1,14 +1,20 @@
 // src/components/Sidebar.js
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom'; // Import thêm cái này
+import { Link, useLocation } from 'react-router-dom'; // Bỏ useNavigate đi, chỉ cần Link
 import { FaHome, FaUser, FaFileAlt, FaUtensils, FaCogs, FaExclamationTriangle, FaList, FaSignOutAlt } from 'react-icons/fa';
 import '../App.css';
 
 const Sidebar = () => {
-  const location = useLocation(); // Lấy đường dẫn hiện tại
+  const location = useLocation(); 
 
   // Hàm kiểm tra xem menu nào đang active
   const isActive = (path) => location.pathname === path ? 'active' : '';
+
+  // Hàm này chỉ cần làm nhiệm vụ xóa Token (việc chuyển hướng để thẻ Link lo)
+  const handleLogout = () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+  };
 
   return (
     <div className="sidebar">
@@ -50,14 +56,22 @@ const Sidebar = () => {
             <li className={isActive('/reports')}><FaExclamationTriangle className="icon" /> Quản lý tố cáo</li>
         </Link>
 
-
         <Link to="/category" className="link-style">
             <li className={isActive('/category')}><FaList className="icon" /> Quản lý danh mục</li>
         </Link>
       </ul>
 
+      {/* --- PHẦN ĐĂNG XUẤT (DÙNG LINK) --- */}
       <div className="logout-btn">
-        <FaSignOutAlt className="icon" /> Đăng xuất
+        <Link 
+            to="/login"           // 1. Chuyển hướng về Login
+            replace={true}        // 2. QUAN TRỌNG: Chặn nút Back (xóa lịch sử)
+            onClick={handleLogout} // 3. Xóa Token trước khi đi
+            className="logout-link" 
+            style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%' }}
+        >
+            <FaSignOutAlt className="icon" /> Đăng xuất
+        </Link>
       </div>
     </div>
   );

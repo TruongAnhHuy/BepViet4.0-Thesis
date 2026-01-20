@@ -33,4 +33,15 @@ class RecipeController extends Controller
     
         return response()->json($recipe);
     }
+    public function updateStatus(Request $request, $id)
+{
+    $recipe = Recipe::find($id);
+    if ($recipe) {
+        // Lưu status (0 hoặc 1 tùy logic của bạn)
+        $recipe->status = $request->status; 
+        $recipe->save();
+        return response()->json(['message' => 'Cập nhật thành công']);
+    }
+    return response()->json(['message' => 'Không tìm thấy món'], 404);
+}
 }

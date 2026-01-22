@@ -1,0 +1,94 @@
+/* --- BỐ CỤC CHUNG (LAYOUT) --- */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f6f9; /* Màu nền xám nhạt toàn trang để làm nổi bật các thẻ bài viết màu trắng */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Phần nội dung chính (bên phải Sidebar) */
+.main-content {
+  flex: 1; /* Chiếm hết phần còn lại của màn hình */
+  padding: 30px 40px;
+  overflow-y: auto; /* Cho phép cuộn nếu danh sách quá dài */
+}
+
+/* --- THANH TÌM KIẾM (SEARCH BAR) --- */
+.search-bar-container {
+  background-color: #ffffff;
+  border-radius: 50px; /* Bo tròn dạng viên thuốc */
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 500px; /* Giới hạn chiều rộng */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Đổ bóng nhẹ */
+  margin-bottom: 30px;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+/* Hiệu ứng khi bấm vào ô tìm kiếm */
+.search-bar-container:focus-within {
+  border-color: #00b69b; /* Đổi màu viền khi nhập */
+  box-shadow: 0 4px 12px rgba(0, 182, 155, 0.15);
+}
+
+.search-icon {
+  color: #888;
+  font-size: 1.1rem;
+  margin-right: 12px;
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 1rem;
+  color: #333;
+  background: transparent;
+}
+
+.search-input::placeholder {
+  color: #aaa;
+}
+
+/* --- TIÊU ĐỀ TRANG --- */
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  border-left: 5px solid #00b69b; /* Đường kẻ màu xanh bên trái tạo điểm nhấn */
+  padding-left: 15px;
+}
+
+/* --- DANH SÁCH BÀI VIẾT --- */
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Khoảng cách giữa các bài viết */
+}
+
+/* Loading và Empty State */
+.post-list p {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* --- RESPONSIVE (Cho màn hình nhỏ) --- */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column; /* Sidebar lên trên hoặc ẩn đi tùy thiết kế Sidebar */
+  }
+  
+  .main-content {
+    padding: 20px;
+  }
+
+  .search-bar-container {
+    max-width: 100%; /* Full màn hình trên mobile */
+  }
+}

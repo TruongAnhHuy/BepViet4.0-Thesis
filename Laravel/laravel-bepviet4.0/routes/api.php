@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\RecipeController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\SystemSettingController;
+use App\Http\Controllers\Api\FaqController;
 
 Route::get('/products', [ProductController::class, 'index']);
 
@@ -30,9 +32,15 @@ Route::get('/posts', [PostController::class, 'index']);
 
 Route::get('/recipes', [RecipeController::class, 'index']);
 Route::get('/recipes/{id}', [RecipeController::class, 'show']);
-
 Route::put('/recipes/{id}/status', [RecipeController::class, 'updateStatus']);
 
+Route::get('/settings', [SystemSettingController::class, 'index']);
+Route::post('/settings', [SystemSettingController::class, 'update']);
+Route::get('/users-minimal', [SystemSettingController::class, 'getUsersList']);
+Route::post('/update-user-role', [SystemSettingController::class, 'updateUserRole']);
+Route::get('/recipes-popular', [RecipeController::class, 'popular']);
+Route::get('/faq', [FaqController::class, 'index']);
+Route::put('/users/{id}/status', [UserController::class, 'updateStatus']);
 
 Route::middleware('auth:sanctum')->group(function () {
     

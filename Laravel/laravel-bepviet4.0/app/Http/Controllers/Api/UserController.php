@@ -90,4 +90,22 @@ class UserController extends Controller
         }
         return response()->json(['message' => 'Không tìm thấy'], 404);
     }
+    // Hàm thay đổi trạng thái User (Khóa/Mở khóa)
+    public function updateStatus(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'Không tìm thấy người dùng'], 404);
+        }
+
+        // Lấy status từ client gửi lên (0 hoặc 1)
+        $user->status = $request->input('status');
+        $user->save();
+
+        return response()->json([
+            'message' => 'Cập nhật trạng thái thành công!',
+            'user' => $user
+        ]);
+    }
 }

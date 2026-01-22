@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import { getCookBook } from "../services/api";
+import { Link } from "react-router-dom"; 
 import { getRecipes } from "../services/api";
 import "../styles/CookBook.css";
 
 const Cookbook = () => {
-  const [cook, setCookBook] = useState([]);
+  const [cook, setCookBook] = useState([]); // Dữ liệu gốc (Full)
+  const [displayCook, setDisplayCook] = useState([]); // Dữ liệu để hiển thị
+  const [activeTab, setActiveTab] = useState('all'); // Tab đang chọn
+  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -12,17 +15,17 @@ const Cookbook = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // 2. Gọi hàm getRecipes thay vì getCookBook
-        const data = await getRecipes(); 
+        const data = await getRecipes();
         
-        // Kiểm tra dữ liệu trả về để set state cho đúng
+        let fullData = [];
         if (Array.isArray(data)) {
-           setCookBook(data);
+           fullData = data;
         } else if (data.data && Array.isArray(data.data)) {
-           setCookBook(data.data);
-        } else {
-           setCookBook([]);
+           fullData = data.data;
         }
+
+        setCookBook(fullData);
+        setDisplayCook(fullData); // Mặc định hiện tất cả
       } catch (err) {
         console.error("Lỗi:", err);
         setError("Không thể tải dữ liệu.");
@@ -34,75 +37,95 @@ const Cookbook = () => {
     fetchData();
   }, []);
 
+  // --- LOGIC LỌC BÀI VIẾT KHÁC NHAU ---
+  const handleTabChange = (tabName) => {
+      setActiveTab(tabName);
+
+      if (tabName === 'all') {
+          setDisplayCook(cook);
+      } 
+      else if (tabName === 'popular') {
+          const popularData = cook.slice(0, 2); 
+          setDisplayCook(popularData);
+      } 
+      else if (tabName === 'street') {
+          const streetData = cook.length > 2 ? cook.slice(3,5) : cook.slice(-2);
+          setDisplayCook(streetData);
+      }
+  };
+
   if (loading) return <div className="text-center p-5">⏳ Đang tải...</div>;
   if (error) return <div className="text-center p-5 text-red-500">❌ {error}</div>;
 
   return (
     <div className="cookbook-container">
-      {/* --- Phần Hero và Filter giữ nguyên --- */}
-      <section className="hero-banner">
-        <div className="hero-content">
-          <span className="badge">CÔNG THỨC CỦA HÔM NAY</span>
-          <h1>Bún Chả Hanoi</h1>
-          <p>Hương vị truyền thống...</p>
-          <button className="btn-primary">Nấu ngay &rarr;</button>
-        </div>
-        <div className="hero-image">
-           {/* Nếu muốn ảnh banner động thì cũng phải sửa src tương tự bên dưới */}
-           <div className="img-placeholder">Ảnh Bún Chả To</div> 
-        </div>
-      </section>
 
       <section className="filter-bar">
         <h3>Xu hướng ở Sài Gòn</h3>
         <div className="filter-buttons">
-          <button className="active">Tất cả</button>
-          <button>Phổ biến</button>
+          <button 
+            className={activeTab === 'all' ? 'active' : ''} 
+            onClick={() => handleTabChange('all')}
+          >
+            Tất cả
+          </button>
+
+          <button 
+            className={activeTab === 'popular' ? 'active' : ''} 
+            onClick={() => handleTabChange('popular')}
+          >
+            Phổ biến
+          </button>
+
+          <button 
+            className={activeTab === 'street' ? 'active' : ''} 
+            onClick={() => handleTabChange('street')}
+          >
+            Đường phố
+          </button>
         </div>
       </section>
 
-      {/* --- Phần Hiển thị Danh sách (Đã sửa logic) --- */}
       <section className="cookbook-grid">
-        {cook.length > 0 ? (
-          cook.map((item) => (
-            // 3. Sửa Key: Dùng recipe_id thay vì id
-            <div key={item.recipe_id} className="cookbook-card">
-              
-              {/* Lưu ý: Tạm thời bỏ qua logic 'type' === story nếu DB chưa có cột type.
-                  Mặc định hiển thị dạng Recipe cho tất cả. */}
+        {displayCook.length > 0 ? (
+            displayCook.map((item) => (
+            /* THAY ĐỔI QUAN TRỌNG Ở ĐÂY:
+               1. Thêm thuộc tính state vào thẻ Link.
+               2. Truyền toàn bộ thông tin món ăn (...item) để trang chi tiết hiện ngay không cần chờ load.
+               3. Truyền thêm 'from: /cookbook' để nút Quay lại biết đường về.
+            */
+            <Link 
+                to={`/recipes/${item.id}`} 
+                state={{ ...item, from: '/cookbook' }} // <--- DÒNG NÀY GIÚP XỬ LÝ NÚT BACK
+                key={item.id || item.recipe_id} 
+                className="cookbook-card"
+            >
               
               <div className="card-image">
-                {/* 4. Sửa đường dẫn ảnh: Copy y hệt từ trang Recipe sang */}
                 <img 
-                  src={`http://127.0.0.1:8000/storage/${item.image_path}`} 
+                  src={item.image_path ? `http://127.0.0.1:8000/storage/${item.image_path}` : "https://via.placeholder.com/300?text=No+Image"} 
                   alt={item.title}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.src = "https://via.placeholder.com/300?text=No+Image"; // Ảnh thay thế nếu lỗi
-                  }}
+                  onError={(e) => { e.target.src = "https://via.placeholder.com/300?text=No+Image"; }}
                 />
                 <span className="heart-icon">♡</span>
               </div>
 
               <div className="card-info">
-                {/* 5. Tên món ăn */}
                 <h4>{item.title}</h4>
-                
-                {/* 6. Thời gian nấu: Dùng cooking_time thay vì time */}
                 <p className="meta-time">
-                  ⏱ {item.cooking_time ? item.cooking_time + ' phút' : '---'}
+                  ⏱ {item.cooking_time ? item.cooking_time + ' phút' : '30 phút'}
                 </p>
-                
-                {/* Thêm mô tả nếu muốn giống trang Recipe */}
-                <p className="text-sm text-gray-500 line-clamp-2">
+                <p className="line-clamp-2">
                     {item.description}
                 </p>
               </div>
 
-            </div>
+            </Link>
           ))
         ) : (
-            <p>Chưa có công thức nào.</p>
+            <div style={{gridColumn: "1 / -1", textAlign: "center", padding: "40px"}}>
+                <p>Không tìm thấy bài viết nào.</p>
+            </div>
         )}
       </section>
     </div>

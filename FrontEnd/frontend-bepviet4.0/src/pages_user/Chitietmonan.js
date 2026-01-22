@@ -1,25 +1,33 @@
 // src/pages_user/RecipeDetail.js
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom'; // 1. Import useLocation
 import { getRecipeById } from '../services/api'; 
-import { Container, Row, Col, Card, Form, Button, ListGroup, Image } from 'react-bootstrap';
-import { FaClock, FaUser, FaFire } from 'react-icons/fa'; 
+import { Container, Row, Col, Card, Button, ListGroup, Image } from 'react-bootstrap';
+import { FaClock, FaUser, FaFire, FaArrowLeft } from 'react-icons/fa'; 
 
 const RecipeDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    
+    // 2. Khởi tạo useLocation để nhận dữ liệu từ trang trước gửi tới
     const location = useLocation();
 
-    // 1. Khởi tạo state: Ưu tiên lấy từ state truyền qua (từ trang danh sách)
+    // 3. Logic xác định đường về:
+    // - Nếu có location.state.from thì lấy đường dẫn đó.
+    // - Nếu không có (ví dụ người dùng gõ link trực tiếp), mặc định về '/recipes'.
+    const backPath = location.state?.from || '/recipes';
+
+    // Xác định tên nút bấm cho thân thiện
+    const backText = backPath === '/cookbook' ? 'Quay lại Bộ sưu tập' : 'Quay lại Danh sách';
+
+    // Ưu tiên lấy dữ liệu món ăn từ state (để hiển thị ngay lập tức cho mượt)
     const [recipe, setRecipe] = useState(location.state || null);
     
-    // Cấu hình đường dẫn ảnh
     const BASE_IMAGE_URL = "http://127.0.0.1:8000/storage/"; 
 
     useEffect(() => {
         const fetchRecipe = async () => {
             try {
-                // Gọi API lấy dữ liệu đầy đủ (nguyên liệu, cách làm...)
                 const data = await getRecipeById(id);
                 setRecipe(data); 
             } catch (error) {
@@ -32,14 +40,12 @@ const RecipeDetail = () => {
         }
     }, [id]);
 
-    // Hàm xử lý hiển thị ảnh
     const getImageUrl = (path) => {
         if (!path) return "https://via.placeholder.com/300";
         if (path.startsWith('http')) return path; 
         return `${BASE_IMAGE_URL}${path}`;
     };
 
-    // Nếu chưa có dữ liệu gì cả
     if (!recipe) {
         return <div className="text-center py-5"><h3>Đang tải dữ liệu...</h3></div>;
     }
@@ -47,13 +53,18 @@ const RecipeDetail = () => {
     return (
         <Container className="py-5">
             <div className="mb-3">
-                 <Button variant="link" className="text-decoration-none text-dark" onClick={() => navigate('/recipes')}>
-                    ← Quay lại danh sách
+                 {/* 4. Sửa lại nút bấm: Sử dụng biến backPath và backText đã tạo ở trên */}
+                 <Button 
+                    variant="link" 
+                    className="text-decoration-none text-dark d-flex align-items-center gap-2" 
+                    onClick={() => navigate(backPath)}
+                 >
+                    <FaArrowLeft /> {backText}
                  </Button>
             </div>
 
+            {/* --- CÁC PHẦN DƯỚI GIỮ NGUYÊN KHÔNG THAY ĐỔI --- */}
             <Row className="mb-4">
-                {/* --- CỘT TRÁI --- */}
                 <Col md={4}>
                     <Card className="mb-3 shadow-sm border-0">
                         <div style={{ height: '300px', overflow: 'hidden', borderRadius: '8px' }}>
@@ -78,12 +89,10 @@ const RecipeDetail = () => {
                             NGUYÊN LIỆU
                         </Card.Header>
                         <ListGroup variant="flush">
-                            {/* Logic: Nếu có nguyên liệu thì hiện, không thì báo đang cập nhật */}
                             {recipe.ingredients && recipe.ingredients.length > 0 ? (
                                 recipe.ingredients.map((item, index) => (
                                     <ListGroup.Item key={index} className="border-bottom-0">
                                         <span className="fw-bold text-warning">
-                                            {/* pivot chứa số lượng và đơn vị từ bảng trung gian */}
                                             • {item.pivot?.quantity} {item.pivot?.unit}
                                         </span> 
                                         {' '} {item.ingredient_name}
@@ -98,7 +107,6 @@ const RecipeDetail = () => {
                     </Card>
                 </Col>
 
-                {/* --- CỘT PHẢI --- */}
                 <Col md={8}>
                     <Card className="mb-4 shadow-sm border-0 bg-light">
                         <Card.Body className="d-flex justify-content-around align-items-center text-center">
@@ -156,13 +164,11 @@ const RecipeDetail = () => {
                 </Col>
             </Row>
 
-            {/* --- KHU VỰC BÌNH LUẬN (GIỮ NGUYÊN) --- */}
             <Row>
                 <Col md={12}>
                     <Card className="shadow-sm border-0 bg-light">
                         <Card.Body className="p-4">
                             <h5 className="fw-bold mb-4 border-bottom pb-2">KHU VỰC BÌNH LUẬN</h5>
-                            {/* ... (Phần Form bình luận giữ nguyên như cũ) ... */}
                             <div className="comment-list">
                                 {recipe.comments?.map((comment, index) => (
                                     <div key={index} className="d-flex mb-3">

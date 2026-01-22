@@ -1,39 +1,51 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { Link } from "react-router-dom"; // 1. Import Link
+import { NavLink } from "react-router-dom";
 
 export default function Footer() {
+
+  const footerLinkClass = ({ isActive }) =>
+    `btn btn-sm fw-bold w-100 border-0 ${
+      isActive
+        ? "btn-dark text-warning"
+        : "btn-warning text-dark"
+    }`;
+
   return (
-    <footer className="bg-warning py-3 mt-5">
+    <footer className="bg-warning py-2 mt-4">
       <Container>
-        <Row className="text-center">
-          
-          <Col>
-            {/* 2. Dùng thẻ Link thay vì để chữ trơ trọi */}
-            {/* className giúp bỏ gạch chân và chỉnh màu chữ */}
-            <Link to="/faq" className="text-dark text-decoration-none fw-bold">
+        <Row className="text-center g-1">
+
+          <Col md={3} sm={6}>
+            <NavLink to="/faq" className={footerLinkClass}>
               Hỏi đáp
-            </Link>
+            </NavLink>
           </Col>
 
-          <Col>
-            <Link to="/contact" className="text-dark text-decoration-none fw-bold">
+          <Col md={3} sm={6}>
+            <NavLink to="/contact" className={footerLinkClass}>
               Liên hệ
-            </Link>
+            </NavLink>
           </Col>
 
-          <Col>
-            <Link to="/policy" className="text-dark text-decoration-none fw-bold">
+          <Col md={3} sm={6}>
+            <NavLink to="/policy" className={footerLinkClass}>
               Chính sách
-            </Link>
+            </NavLink>
           </Col>
 
-          <Col>
-            <Link to="/terms" className="text-dark text-decoration-none fw-bold">
+          <Col md={3} sm={6}>
+            <NavLink to="/terms" className={footerLinkClass}>
               Điều khoản
-            </Link>
+            </NavLink>
           </Col>
 
+        </Row>
+
+        <Row className="mt-2">
+          <Col className="text-center text-dark small">
+            © 2026 Bếp Việt 4.0
+          </Col>
         </Row>
       </Container>
     </footer>

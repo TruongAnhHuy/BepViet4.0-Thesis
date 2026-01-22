@@ -1,44 +1,109 @@
 import { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { getMenu } from "../services/api";
 
 export default function Header() {
   const [menu, setMenu] = useState([]);
+  const [user, setUser] = useState(null);
+  const [keyword, setKeyword] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // MENU
     getMenu().then(data => setMenu(data));
+
+    // LOGIN CHECK
+    const token = localStorage.getItem("token");
+    const localUser = localStorage.getItem("user");
+
+    if (!token || !localUser) {
+      setUser(null);
+      return;
+    }
+
+    try {
+      const parsedUser = JSON.parse(localUser);
+      parsedUser?.id ? setUser(parsedUser) : setUser(null);
+    } catch {
+      setUser(null);
+    }
   }, []);
 
-  return (
-    <nav className="navbar sticky-top m-0 p-0">
-      <div className="container-fluid bg-warning bg-opacity d-flex justify-content-around align-items-center py-2">
-        <a href="/dashboard_user" className="navbar-brand fw-bold">Bếp việt 4.0</a>
-        <a href="/recipes" className="navbar-brand fw-bold">Ẩm thực</a>
-        <a href="/dashboard_user" className="navbar-brand fw-bold"><i class="fa-solid fa-house"></i>Trang chủ</a>
-        <a href="/blog" className="navbar-brand fw-bold">Blog</a>
-        <a href="/" className="navbar-brand fw-bold">Món ăn</a>
-        <a href="/cookbook" className="navbar-brand fw-bold">CookBook</a>
-        {menu.map(item => (
-          <a
-            key={item.id}
-            href={item.link}
-            className="navbar-brand"
-          >
-            {item.name}
-          </a>
-        ))}
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (!keyword.trim()) return;
+    navigate(`/recipes?search=${keyword}`);
+    setKeyword("");
+  };
 
-        <form className="d-flex" role="search">
+  // ✅ CLASS DÙNG CHO NAV (hover + active background)
+  const navClass = ({ isActive }) =>
+    `btn fw-bold mx-1 ${
+      isActive
+        ? "btn-secondary text-white"
+        : "btn-outline-secondary text-dark"
+    }`;
+
+  return (
+    <nav className="navbar sticky-top bg-warning py-2">
+      <div className="container-fluid d-flex align-items-center justify-content-between">
+
+        {/* LOGO */}
+        <NavLink to="/dashboard_user" className="navbar-brand fw-bold">
+          Bếp Việt 4.0
+        </NavLink>
+
+        {/* MENU */}
+        <div>
+          <NavLink to="/dashboard_user" className={navClass}>
+            <i className="fa-solid fa-house"></i> Trang chủ
+          </NavLink>
+
+          <NavLink to="/recipes" className={navClass}>
+            Ẩm thực
+          </NavLink>
+
+          <NavLink to="/blog" className={navClass}>
+            Blog
+          </NavLink>
+
+          <NavLink to="/cookbook" className={navClass}>
+            CookBook
+          </NavLink>
+
+          {menu.map(item => (
+            <NavLink
+              key={item.id}
+              to={item.link}
+              className={navClass}
+            >
+              {item.name}
+            </NavLink>
+          ))}
+        </div>
+
+        {/* SEARCH */}
+        <form className="d-flex" onSubmit={handleSearch}>
           <input
             className="form-control me-2"
-            type="search"
-            placeholder="Search"
+            placeholder="Tìm món ăn"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
           />
-          <button className="btn btn-outline-success" type="submit">
-            Search
-          </button>
+          <button className="btn btn-outline-dark">Tìm</button>
         </form>
 
-        <a href="/profile" className="navbar-brand">Profile</a>
+        {/* LOGIN */}
+        {!user ? (
+          <NavLink to="/login" className="btn btn-outline-dark fw-bold">
+            Đăng nhập
+          </NavLink>
+        ) : (
+          <NavLink to="/profile" className="btn btn-outline-dark fw-bold">
+            {user.name ?? "Profile"}
+          </NavLink>
+        )}
+
       </div>
     </nav>
   );

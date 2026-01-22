@@ -31,7 +31,7 @@ export default function Recipe() {
   // --- [QUAN TRỌNG] SỬA HÀM NÀY ---
   const handleToDetail = (recipe) => {
     // Truyền cả object recipe qua state
-    navigate(`/recipe/${recipe.id}`, { state: recipe });
+    navigate(`/recipes/${recipe.id}`, { state: recipe });
   };
 
   if (loading) {

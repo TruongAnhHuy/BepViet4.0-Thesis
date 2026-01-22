@@ -1,6 +1,8 @@
 import axiosClient from "../api/axiosClient";
-const API_URL = "http://localhost:8000/api";
 
+const API_URL = "http://127.0.0.1:8000/api";
+
+// ================= MENU – SLIDE – PRODUCT =================
 export const getMenu = () =>
   fetch(`${API_URL}/menu`).then(res => res.json());
 
@@ -10,43 +12,69 @@ export const getSlides = () =>
 export const getProducts = () =>
   fetch(`${API_URL}/products`).then(res => res.json());
 
-
-
-
+// ================= BLOG =================
 export async function getBlogs() {
   const res = await fetch(`${API_URL}/blogs`);
   if (!res.ok) throw new Error("Failed to fetch blogs");
   return res.json();
 }
 
-// 1. Lấy danh sách món ăn
+// ================= RECIPE =================
 export const getRecipes = () => {
-    return axiosClient.get('/recipes'); 
+  return axiosClient.get("/recipes");
 };
 
-// 2. Lấy chi tiết 1 món ăn
 export const getRecipeById = (id) => {
-    return axiosClient.get(`/recipes/${id}`);
+  return axiosClient.get(`/recipes/${id}`);
 };
 
-// 3. (Ví dụ thêm) Lấy danh sách User
-export const getUsers = () => {
-    return axiosClient.get('/users');
-};
 export const updateRecipeStatus = async (id, newStatus) => {
-    // Chuyển đổi text tiếng Việt sang giá trị Database hiểu (nếu cần)
-    // Ví dụ: Backend cần số 1 hoặc 0
-    const statusValue = newStatus === "Đã duyệt" ? 1 : 0; 
+  const statusValue = newStatus === "Đã duyệt" ? 1 : 0;
 
-    // Gọi API (Đường dẫn này phải khớp với route Laravel của bạn)
-    const response = await fetch(`http://127.0.0.1:8000/api/recipes/${id}/status`, {
-        method: 'PUT', // Hoặc POST tùy backend
-        headers: {
-            'Content-Type': 'application/json',
-            // 'Authorization': 'Bearer ...' // Nếu có token
-        },
-        body: JSON.stringify({ status: statusValue })
-    });
+  const res = await fetch(`${API_URL}/recipes/${id}/status`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status: statusValue }),
+  });
 
-    return response.json();
+  return res.json();
+};
+
+// ================= USER =================
+export const getUsers = () => {
+  return axiosClient.get("/users");
+};
+
+export const getProfile = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) throw new Error("Chưa đăng nhập");
+
+  const res = await fetch(`${API_URL}/user`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) throw new Error("Unauthorized");
+  return res.json();
+};
+
+// ================= FAQ – HỎI ĐÁP =================
+export const getFaqs = async () => {
+  const res = await fetch(`${API_URL}/faqs`);
+  if (!res.ok) throw new Error("Failed to fetch faqs");
+  return res.json();
+};
+
+export const createFaq = async (data) => {
+  const res = await fetch(`${API_URL}/faqs`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) throw new Error("Failed to create faq");
+  return res.json();
 };

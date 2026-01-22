@@ -15,6 +15,11 @@ import Register from "./pages_user/Register";
 import CookBook from "./pages_user/CookBook";
 import ProfileUser from "./pages_user/Profile";
 import EditProfile from "./pages_user/EditProfile";
+import Faq from "./pages_user/Hoidap";
+import Lienhe from "./pages_user/Contact";
+import Policy from "./pages_user/Policy";
+import Terms from "./pages_user/Terms";
+
 
 // 3. Import các trang Admin
 import PostManagement from "./layout_admin/PostManagement"; 
@@ -39,7 +44,19 @@ function App() {
             <UserLayout> <Recipe /> </UserLayout>
         } />
 
-        <Route path="/recipe/:id" element={
+        <Route path="/contact" element={
+            <UserLayout> <Lienhe /> </UserLayout>
+        } />
+
+        <Route path="/policy" element={
+            <UserLayout> <Policy /> </UserLayout>
+        } /> 
+        
+        <Route path="/terms" element={
+            <UserLayout> <Terms /> </UserLayout>
+        } />
+
+        <Route path="/recipes/:id" element={
            <UserLayout> <RecipeDetail /> </UserLayout> 
         } />
 
@@ -55,6 +72,9 @@ function App() {
 
         <Route path="/cookbook" element={
             <UserLayout> <CookBook /> </UserLayout>
+        } />
+        <Route path="/faq" element={
+            <UserLayout> <Faq /> </UserLayout>
         } />
         <Route path="/profile" element={
            <UserLayout> <ProfileUser /> </UserLayout>

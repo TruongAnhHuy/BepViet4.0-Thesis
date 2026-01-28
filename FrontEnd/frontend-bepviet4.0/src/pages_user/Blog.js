@@ -2,11 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, InputGroup, Button, Badge, ListGroup, Spinner } from 'react-bootstrap';
 import { FaSearch, FaCalendarAlt, FaUser, FaArrowRight, FaCommentDots } from 'react-icons/fa';
 import axiosClient from '../api/axiosClient';
+import { useNavigate } from 'react-router-dom'; // <--- 1. Import useNavigate
 
-const Blog = ({ onSelectPost }) => {
+const Blog = () => { // Bỏ prop onSelectPost vì ta dùng Router
   const [posts, setPosts] = useState([]);
   const [recentPosts, setRecentPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  const navigate = useNavigate(); // <--- 2. Khởi tạo hook
+
+  // Hàm chuyển trang khi click vào bài viết
+  const handlePostClick = (postId) => {
+      navigate(`/blog/${postId}`); 
+  };
 
   // Danh mục mẫu
   const categories = ["Ẩm thực 3 miền", "Mẹo vặt nhà bếp", "Review quán ngon", "Sức khỏe & Dinh dưỡng"];
@@ -15,12 +23,7 @@ const Blog = ({ onSelectPost }) => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        // Gọi API
         const response = await axiosClient.get('/posts');
-        
-        // Log dữ liệu ra console để kiểm tra
-        console.log("Dữ liệu API trả về:", response.data);
-
         const fetchedPosts = response.data.data || response.data;
         
         if (Array.isArray(fetchedPosts)) {
@@ -69,7 +72,11 @@ const Blog = ({ onSelectPost }) => {
             <Row>
               {posts.map((post) => (
                 <Col md={6} key={post.id} className="mb-4">
-                  <Card className="h-100 border-0 shadow-sm blog-card" onClick={() => onSelectPost && onSelectPost(post)} style={{cursor: 'pointer'}}>
+                  <Card 
+                    className="h-100 border-0 shadow-sm blog-card" 
+                    onClick={() => handlePostClick(post.id)} // <--- 3. Gắn sự kiện click
+                    style={{cursor: 'pointer'}}
+                  >
                     <div className="blog-img-container" style={{height: '200px', overflow: 'hidden', position: 'relative'}}>
                       <Badge bg="warning" text="dark" className="blog-category-badge" style={{position: 'absolute', top: '10px', left: '10px', zIndex: 1}}>
                         Món Ngon
@@ -102,7 +109,6 @@ const Blog = ({ onSelectPost }) => {
           ) : (
             <div className="text-center py-5 bg-light rounded">
                 <h5>Chưa có bài viết nào được đăng.</h5>
-                <p className="text-muted">Hãy kiểm tra Database bảng <b>blog_posts</b> đã có dữ liệu chưa.</p>
             </div>
           )}
         </Col>
@@ -118,22 +124,15 @@ const Blog = ({ onSelectPost }) => {
           </div>
 
           <div className="sidebar-widget mb-5">
-            <h5 className="sidebar-title">Chuyên mục</h5>
-            <ListGroup variant="flush">
-              {categories.map((cat, idx) => (
-                <ListGroup.Item key={idx} action className="border-0 px-0 bg-transparent d-flex justify-content-between align-items-center text-secondary">
-                  <span><FaArrowRight className="me-2 text-warning" size={12}/> {cat}</span>
-                  <Badge bg="light" text="dark" className="rounded-pill border">{(idx + 1) * 2}</Badge>
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
-          </div>
-
-          <div className="sidebar-widget mb-5">
             <h5 className="sidebar-title">Bài viết nổi bật</h5>
             <div className="recent-posts">
               {recentPosts.map((item) => (
-                <div key={item.id} className="d-flex mb-3 align-items-center cursor-pointer" onClick={() => onSelectPost && onSelectPost(item)} style={{cursor: 'pointer'}}>
+                <div 
+                    key={item.id} 
+                    className="d-flex mb-3 align-items-center cursor-pointer" 
+                    onClick={() => handlePostClick(item.id)} // <--- 4. Gắn sự kiện click cho sidebar
+                    style={{cursor: 'pointer'}}
+                >
                   <div className="bg-secondary rounded flex-shrink-0" style={{width: '60px', height: '60px', overflow: 'hidden'}}>
                     <img src={getImageUrl(item.image_path)} className="w-100 h-100 object-fit-cover opacity-75" alt=""/>
                   </div>

@@ -4,93 +4,111 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User; // ✅ CHUẨN – RẤT QUAN TRỌNG
+
 
 class AuthController extends Controller
 {
-    // --- ĐĂNG KÝ ---
-    // ...
-    public function register(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            // --- SỬA ĐIỂM 3: VALIDATION ---
-            // Đổi 'name' thành 'username'
-            'username' => 'required|string|max:50|unique:users', 
-            'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $user = User::create([
-            // --- SỬA ĐIỂM 4: CREATE ---
-            // Đổi 'name' thành 'username'
-            'username' => $request->username, 
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role_id' => 2,
-            'status' => 1,
-            'avatar' => null
-        ]);
-
-        // ... phần còn lại giữ nguyên
-    }
-// ...
-
-    // --- ĐĂNG NHẬP ---
+    /**
+     * ĐĂNG NHẬP
+     */
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required'
+        // 1️⃣ Validate dữ liệu
+        $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required|string|min:6',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
+        // 2️⃣ Tìm user theo email
+        $user = User::where('email', $request->email)->first();
 
-        // Kiểm tra Email, Password và Status = 1
-        $credentials = [
-            'email' => $request['email'],
-            'password' => $request['password'],
-            'status' => 1 
-        ];
-
-        if (!Auth::attempt($credentials)) {
+        // 3️⃣ Kiểm tra user & password
+        if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
-                'message' => 'Tài khoản hoặc mật khẩu không đúng, hoặc tài khoản đã bị khóa.'
+                'message' => 'Email hoặc mật khẩu không đúng'
             ], 401);
         }
 
-        // TỐI ƯU: Lấy user trực tiếp từ Auth thay vì query lại DB
-        $user = Auth::user(); 
+        // 4️⃣ Xoá token cũ (tránh trùng token)
+        $user->tokens()->delete();
 
-        // Xóa các token cũ để chỉ cho phép đăng nhập trên 1 thiết bị (Tùy chọn, nếu muốn bảo mật cao)
-        // $user->tokens()->delete();
-
+        // 5️⃣ Tạo token mới
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        // 6️⃣ Trả về JSON
         return response()->json([
             'message' => 'Đăng nhập thành công',
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'user' => $user
-        ]);
+            'token'   => $token,
+            'user'    => [
+                'id'    => $user->id,
+                'name'  => $user->name,
+                'email' => $user->email,
+                'role'  => $user->role_id ?? null
+            ]
+        ], 200);
     }
 
-    // --- ĐĂNG XUẤT (Thêm mới) ---
+    /**
+     * ĐĂNG XUẤT
+     */
     public function logout(Request $request)
+{
+    if ($request->user()) {
+        $request->user()->tokens()->delete(); // xoá TẤT CẢ token
+    }
+
+    return response()->json([
+        'message' => 'Đăng xuất thành công'
+    ], 200);
+}
+
+    public function profile(Request $request)
+{
+    return response()->json($request->user());
+}
+
+
+public function register(Request $request)
+{
+    $request->validate([
+        'username' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|confirmed|min:6',
+    ]);
+
+    $user = User::create([
+        'name'     => $request->username, // 👈 MAP username → name
+        'email'    => $request->email,
+        'password' => Hash::make($request->password), // 👈 HASH ĐÚNG
+        'role_id'  => 2
+    ]);
+
+    return response()->json([
+        'message' => 'Đăng ký thành công',
+        'user' => $user
+    ], 201);
+}
+public function getProfile(Request $request)
     {
-        // Xóa token hiện tại đang dùng để request
-        $request->user()->currentAccessToken()->delete();
+        // Lấy thông tin user đang đăng nhập từ token
+        $user = $request->user(); 
+
+        if (!$user) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Không tìm thấy người dùng'
+            ], 404);
+        }
 
         return response()->json([
-            'message' => 'Đăng xuất thành công'
-        ]);
+            'status' => 200,
+            'user' => $user, // Trả về toàn bộ thông tin user
+        ], 200);
     }
+
 }
+
+

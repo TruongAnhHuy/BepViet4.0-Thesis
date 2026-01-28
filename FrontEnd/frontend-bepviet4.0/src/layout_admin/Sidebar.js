@@ -56,8 +56,8 @@ const Sidebar = () => {
             <li className={isActive('/reports')}><FaExclamationTriangle className="icon" /> Quản lý tố cáo</li>
         </Link>
 
-        <Link to="/category" className="link-style">
-            <li className={isActive('/category')}><FaList className="icon" /> Quản lý danh mục</li>
+        <Link to="/admin-category" className="link-style">
+            <li className={isActive('/admin-category')}><FaList className="icon" /> Quản lý danh mục</li>
         </Link>
       </ul>
 

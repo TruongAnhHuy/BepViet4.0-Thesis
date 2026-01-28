@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\Comment;
+use App\Models\Use;
 use App\Models\Ingredient;
 class Recipe extends Model
 {

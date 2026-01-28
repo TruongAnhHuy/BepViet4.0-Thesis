@@ -1,0 +1,103 @@
+/* Layout */
+.admin-layout {
+  display: flex;
+  height: 100vh;
+  background: #f3f3f3;
+}
+
+.admin-content {
+  flex: 1;
+  padding: 20px 30px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: #e5e5e5;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.logo {
+  height: 80px;
+  background: #fff;
+  text-align: center;
+  line-height: 80px;
+  margin-bottom: 15px;
+}
+
+.user-box {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+}
+
+.menu li {
+  background: #fff;
+  margin-bottom: 10px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.menu li.active {
+  background: #d1d1d1;
+}
+
+.logout {
+  text-align: right;
+  cursor: pointer;
+}
+
+/* Category */
+.page-title {
+  margin-bottom: 15px;
+}
+
+.category-box {
+  background: #dcdcdc;
+  padding: 15px;
+}
+
+.category-actions {
+  text-align: right;
+  margin-bottom: 10px;
+}
+
+.btn {
+  padding: 8px 15px;
+  border: none;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.btn-add {
+  background: #fff;
+}
+
+.btn-delete {
+  background: #ccc;
+}
+
+/* Table */
+.category-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.category-table th,
+.category-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.category-table tr.selected {
+  border: 2px solid #2196f3;
+}

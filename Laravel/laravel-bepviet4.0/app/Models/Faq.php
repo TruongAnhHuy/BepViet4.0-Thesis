@@ -9,7 +9,11 @@ class Faq extends Model
 {
     use HasFactory;
 
+    protected $table = 'faq';
+
     protected $fillable = [
+        'name',
+        'email',
         'question',
         'answer',
         'status'

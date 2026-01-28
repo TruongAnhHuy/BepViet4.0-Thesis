@@ -2,6 +2,16 @@ import axiosClient from "../api/axiosClient";
 
 const API_URL = "http://127.0.0.1:8000/api";
 
+// ================= CẤU HÌNH INTERCEPTOR (Token) =================
+// Tự động thêm token vào header cho mọi request dùng axiosClient
+axiosClient.interceptors.request.use(config => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 // ================= MENU – SLIDE – PRODUCT =================
 export const getMenu = () =>
   fetch(`${API_URL}/menu`).then(res => res.json());
@@ -29,7 +39,7 @@ export const getRecipeById = (id) => {
 };
 
 export const updateRecipeStatus = async (id, newStatus) => {
-  const statusValue = newStatus === "Đã duyệt" ? 1 : 0;
+  const statusValue = newStatus === "Chờ duyệt" ? 0 : 1;
 
   const res = await fetch(`${API_URL}/recipes/${id}/status`, {
     method: "PUT",
@@ -40,24 +50,18 @@ export const updateRecipeStatus = async (id, newStatus) => {
   return res.json();
 };
 
-// ================= USER =================
+// ================= USER & PROFILE =================
 export const getUsers = () => {
   return axiosClient.get("/users");
 };
 
-export const getProfile = async () => {
-  const token = localStorage.getItem("token");
-  if (!token) throw new Error("Chưa đăng nhập");
+// Dùng axiosClient để tự động gắn token, không cần fetch thủ công
+export const getProfile = () => axiosClient.get("/user/profile");
 
-  const res = await fetch(`${API_URL}/user`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!res.ok) throw new Error("Unauthorized");
-  return res.json();
-};
+// Các hàm lấy dữ liệu cá nhân
+export const getMyRecipes = () => axiosClient.get("/user/recipes");
+export const getMyComments = () => axiosClient.get("/user/comments");
+export const getMyPosts = () => axiosClient.get("/user/posts");
 
 // ================= FAQ – HỎI ĐÁP =================
 export const getFaqs = async () => {
@@ -77,4 +81,30 @@ export const createFaq = async (data) => {
 
   if (!res.ok) throw new Error("Failed to create faq");
   return res.json();
+};
+
+// ================= POSTS =================
+// Lấy ds bài viết
+export const getPosts = () => {
+    return axiosClient.get('/posts');
+};
+
+export const updatePostStatus = (id, statusValue) => {
+    // axiosClient.put sẽ tự trả về Promise
+    return axiosClient.put(`/posts/${id}/status`, { 
+        status: statusValue 
+    });
+};
+
+export const getRecipeSuggest = async (keyword) => {
+  const res = await fetch(
+    `http://127.0.0.1:8000/api/recipes/suggest?keyword=${encodeURIComponent(keyword)}`
+  );
+
+  if (!res.ok) {
+    console.error("Suggest API error");
+    return [];
+  }
+
+  return res.json(); 
 };

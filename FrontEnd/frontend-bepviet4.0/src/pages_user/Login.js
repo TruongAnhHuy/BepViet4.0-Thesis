@@ -19,24 +19,31 @@ const Login = () => {
     setErrorMessage('');
 
     try {
-      // --- SỬA LẦN 1: Điền thẳng link server để tránh lỗi gọi nhầm cổng 3000 ---
-      const res = await axiosClient.post('http://127.0.0.1:8000/api/login', { email, password });
+      const response = await axiosClient.post("/login", { email, password });
       
-      // --- SỬA LẦN 2: Bỏ ".data" thừa (Vì axiosClient đã xử lý rồi) ---
-      // Code cũ: res.data.access_token -> Code mới: res.access_token
-      if (res && res.access_token) {
-          localStorage.setItem('token', res.access_token);
-          localStorage.setItem('user', JSON.stringify(res.user));
+      // --- PHẦN ĐÃ SỬA ---
+      // Kiểm tra xem dữ liệu nằm ở 'response' hay 'response.data' (đề phòng interceptor)
+      const data = response.data ? response.data : response;
+      
+      // Kiểm tra kỹ xem có token không
+      const token = data.token || data.access_token; 
 
-          // Kiểm tra quyền và chuyển hướng
-          if (res.user && res.user.role_id === 1) {
-            navigate('/dashboard');
-          } else {
-            navigate('/dashboard_user'); // Hoặc trang chủ
-          }
+      if (token) {
+        // Lưu token và user vào localStorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        // Điều hướng theo role_id
+        if (data.user && data.user.role_id === 1) {
+          navigate("/dashboard");
+        } else {
+          navigate("/dashboard_user"); // Chuyển về trang chủ hoặc profile
+        }
       } else {
-          setErrorMessage('Phản hồi từ server không hợp lệ.');
+        // Nếu API trả về 200 nhưng không có token
+        setErrorMessage("Đăng nhập thành công nhưng không tìm thấy Token xác thực.");
       }
+      // -------------------
 
     } catch (error) {
       console.error("Login Error:", error);
@@ -77,7 +84,7 @@ const Login = () => {
       <form onSubmit={handleLogin} style={{ width: '100%' }}>
         
         {errorMessage && (
-          <div className="alert alert-danger text-center p-2 mb-3">
+          <div className="alert alert-danger text-center p-2 mb-3" style={{color: 'red', background: '#ffe6e6', borderRadius: '10px'}}>
             {errorMessage}
           </div>
         )}

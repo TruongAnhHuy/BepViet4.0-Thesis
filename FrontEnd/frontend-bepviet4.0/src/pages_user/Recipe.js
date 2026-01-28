@@ -1,4 +1,3 @@
-// src/pages_user/Recipe.js
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getRecipes } from "../services/api";
@@ -28,9 +27,9 @@ export default function Recipe() {
     return `${BASE_IMAGE_URL}${path}`;
   };
 
-  // --- [QUAN TRỌNG] SỬA HÀM NÀY ---
+ 
   const handleToDetail = (recipe) => {
-    // Truyền cả object recipe qua state
+  
     navigate(`/recipes/${recipe.id}`, { state: recipe });
   };
 

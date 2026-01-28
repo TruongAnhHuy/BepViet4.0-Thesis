@@ -19,16 +19,25 @@ import Faq from "./pages_user/Hoidap";
 import Lienhe from "./pages_user/Contact";
 import Policy from "./pages_user/Policy";
 import Terms from "./pages_user/Terms";
+import AddBlog from "./pages_user/AddBlog";
+import ChangePassword from "./pages_user/ChangePassword";
+import TaoCongThuc from "./pages_user/TaoCongThuc";
 
 
 // 3. Import các trang Admin
-import PostManagement from "./layout_admin/PostManagement"; 
+
 import QuanLyToCao from './pages_admin/QuanLyUserReport';
 import QuanLyUser from './pages_admin/QuanLyUser';
 import QuanLyHeThong from './pages_admin/QuanLyHeThong'; 
 import Dashboard from './pages_admin/Dashboard';
 import RecipeManagement from "./pages_admin/QuanLyCongThuc";
-import ChangePassword from "./pages_user/ChangePassword";
+import PostManagement from "./pages_admin/QuanLyBaiViet";
+import QuanLyCauHoi from "./pages_admin/QuanLyFaq";
+import QuanLyDanhMuc from "./pages_admin/QuanLiDanhMuc.js";
+import ThemDanhMuc from "./pages_admin/ThemDanhMuc";
+import SuaDanhMuc from "./pages_admin/SuaDanhMuc";
+import PostDetailProfile from './pages_user/PostDetailProfile';
+
 
 function App() {
   return (
@@ -63,7 +72,13 @@ function App() {
         <Route path="/blog" element={
             <UserLayout> <Blog /> </UserLayout>
         } />
+        <Route path="/blog/:id" element={
+            <UserLayout> <PostDetailProfile /> </UserLayout>
+        } />
 
+        <Route path="/blog/add" element={
+            <UserLayout> <AddBlog /> </UserLayout>
+        } />
         
 
         <Route path="/login" element={<Login />} />
@@ -84,6 +99,9 @@ function App() {
         } />
         <Route path="/profile/changepassword" element={
            <UserLayout> <ChangePassword /> </UserLayout> 
+        } />
+        <Route path="/create_recipes" element={
+            <UserLayout> <TaoCongThuc /> </UserLayout> 
         } />
 
         {/* --- NHÓM 2: TRANG ADMIN (Đã bọc AdminLayout) --- */}
@@ -110,6 +128,19 @@ function App() {
         <Route path="/posts" element={
             <AdminLayout> <PostManagement /> </AdminLayout>
         } />
+        <Route
+          path="/admin/faqs"
+          element={<AdminLayout><QuanLyCauHoi /></AdminLayout>}
+        />
+        <Route path="/admin-category" element={
+            <AdminLayout><QuanLyDanhMuc /></AdminLayout>
+        } />
+        <Route path="/admin-category/add-category" element={
+            <AdminLayout><ThemDanhMuc /></AdminLayout>
+        } />
+        <Route path="/admin-category/edit/:id"element={
+            <AdminLayout><SuaDanhMuc /></AdminLayout>
+        }/>
 
       </Routes>
     </Router>

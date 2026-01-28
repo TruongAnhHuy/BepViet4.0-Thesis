@@ -8,7 +8,7 @@ const UserLayout = ({ children }) => {
   return (
     <div className="user-layout">
       <Header />
-      <Slide />
+      
       
       {/* Đây là nơi nội dung của từng trang (Home, Blog...) sẽ hiện ra */}
       <div className="user-container">

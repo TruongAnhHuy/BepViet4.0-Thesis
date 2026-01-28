@@ -12,18 +12,25 @@ const RecipeManagement = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
     getRecipes()
       .then((data) => {
-        const formattedData = data.map((item) => ({
-          id: item.id,           
+        const list = Array.isArray(data) ? data : (data.data || []);
+
+        const formattedData = list.map((item) => ({
+          id: item.id,          
           name: item.title,             
           image: item.image_path ? `http://127.0.0.1:8000/storage/${item.image_path}` : "", 
-          authors: ["AD"],              
-          // --- SỬA DÒNG NÀY ---
-      // Nếu Database trả về số (0/1) hoặc chuỗi, hãy map nó ra text hiển thị
-      // Ví dụ: Database lưu 0 là đã duyệt, 1 là chờ duyệt
-          status: item.status === 1 || item.status === 'approved' ? "Chờ duyệt" : "Đã duyệt"
+          authors: [item.user?.username || "Admin"], 
+          
+          // Logic hiển thị: 1 là Đã duyệt, 0 là Chờ duyệt
+          status: (item.status === 0 || item.status === 'approved') ? "Chờ duyệt" : "Đã duyệt"
         }));
+
+        formattedData.sort((a, b) => a.id - b.id);
 
         setRecipes(formattedData);         
         setFilteredRecipes(formattedData); 
@@ -33,27 +40,45 @@ const RecipeManagement = () => {
         console.error("Lỗi tải công thức:", error);
         setLoading(false);
       });
-  }, []);
+  };
 
-// --- HÀM XỬ LÝ KHI ADMIN ĐỔI TRẠNG THÁI ---
-  const handleStatusChange = async (id, newStatus) => {
-    // 1. Cập nhật giao diện NGAY LẬP TỨC (để người dùng thấy nhanh)
+  // --- SỬA LẠI HÀM NÀY (QUAN TRỌNG) ---
+  const handleStatusChange = async (id, inputStatus) => {
+    console.log("Dữ liệu nhận được từ nút bấm:", inputStatus);
+
+    // 1. Xác định chính xác trạng thái số (dbStatus) để lưu vào DB
+    // Chấp nhận: số 1, chuỗi "1", chữ "Đã duyệt", chữ "approved" => Đều là 1 (Đã duyệt)
+    // Còn lại => 0 (Chờ duyệt)
+    let dbStatus = 0;
+    if (
+        inputStatus === 1 || 
+        inputStatus === "1" || 
+        inputStatus === "Đã duyệt" || 
+        inputStatus === "approved"
+    ) {
+        dbStatus = 1;
+    }
+
+    // 2. Xác định chữ hiển thị trên giao diện (displayStatus)
+    const displayStatus = dbStatus === 0 ? "Chờ duyệt" : "Đã duyệt";
+
+    // 3. Cập nhật giao diện NGAY LẬP TỨC
     const updateLocalList = (list) => list.map(recipe => 
-        recipe.id === id ? { ...recipe, status: newStatus } : recipe
+        recipe.id === id ? { ...recipe, status: displayStatus } : recipe
     );
     setRecipes(prev => updateLocalList(prev));
     setFilteredRecipes(prev => updateLocalList(prev));
 
-    // 2. Gửi lên Server để lưu vĩnh viễn
+    // 4. Gửi số (0 hoặc 1) lên Server
     try {
-        await updateRecipeStatus(id, newStatus);
-        console.log("Đã lưu trạng thái vào database thành công!");
+        await updateRecipeStatus(id, dbStatus);
+        console.log(`✅ Đã lưu vào DB: ID ${id} -> Status ${dbStatus}`);
     } catch (error) {
-        console.error("Lỗi khi lưu trạng thái:", error);
-        alert("Lỗi kết nối! Trạng thái chưa được lưu.");
-        // (Tùy chọn) Revert lại trạng thái cũ nếu lỗi
+        console.error("❌ Lỗi lưu DB:", error);
+        alert("Lỗi kết nối! Không thể lưu trạng thái.");
+        fetchData(); // Load lại dữ liệu gốc nếu lỗi
     }
-}
+  }
 
   // --- HÀM TÌM KIẾM ---
   const handleSearch = (e) => {
